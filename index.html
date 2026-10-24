@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sound Archive — Daum Kim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Nanum+Myeongjo:wght@700;800&display=swap">
+<style>
+*{box-sizing:border-box}[hidden]{display:none!important}html,body{margin:0}
+
+/* Layout: the gallery photo fills the room, the deck sits in it, the reel list waits below like a shelf. One dark look, chosen. */
+:root{
+  --room:#0b0b0a; --ink:#ede9e1; --ink-dim:#aaa59c; --ink-faint:#77736c;
+  --panel:rgba(12,12,11,.66); --line:rgba(255,255,255,.13); --amber:#ffb547;
+  --f-display:"Nanum Myeongjo","AppleMyungjo",serif;
+  --f-label:"Archivo Narrow","Arial Narrow",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --f-body:"IBM Plex Sans KR",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html{background:var(--room);color:var(--ink)}
+body{background:transparent;color:var(--ink)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.6;min-height:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+
+/* ---------- 배경 (트랙마다 바뀜) ---------- */
+.bg{position:fixed;inset:0;z-index:-2;background-size:cover;background-position:center 60%;opacity:0;transition:opacity 1.4s ease}
+.bg.on{opacity:1}
+.veil{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,8,7,.55) 0%,rgba(8,8,7,.05) 22%,rgba(8,8,7,.10) 60%,rgba(8,8,7,.82) 100%)}
+
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-top:max(20px,env(safe-area-inset-top,0px))}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.brand .en{font-family:var(--f-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--ink-dim)}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,32px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance;text-shadow:0 1px 18px rgba(0,0,0,.5)}
+header a{color:var(--ink-dim);font-family:var(--f-label);letter-spacing:.12em;text-transform:uppercase;font-size:12px;text-decoration:none;white-space:nowrap}
+header a:hover{color:var(--ink)}
+header a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+/* ---------- 데크 ---------- */
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:1600/1000;margin-top:-1%}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hit{position:absolute;background:none;border:0;padding:0;margin:0;cursor:pointer;border-radius:6px;touch-action:manipulation}
+.hit:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.knob-hit{cursor:ns-resize;touch-action:none;border-radius:50%}
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--f-label);letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--ink-dim)}
+
+/* 좁은 화면용 조작 줄 */
+.mobile-bar{display:none;gap:8px;justify-content:center}
+.mobile-bar button{flex:1;max-width:96px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  font-family:var(--f-label);font-weight:600;letter-spacing:.06em;font-size:15px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.mobile-bar button:active{background:rgba(255,255,255,.08)}
+@media (max-width:640px){.mobile-bar{display:flex}.hint{display:none}}
+
+.hint{margin:0;text-align:center;color:var(--ink-dim);font-size:13px;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.hint kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--ink)}
+
+/* ---------- 릴 목록 ---------- */
+.shelf{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 6px 10px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.shelf-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 12px 8px}
+.shelf-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:18px}
+.shelf-head span{font-family:var(--f-label);letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--ink-dim)}
+.lib{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:6px}
+@media (max-width:760px){.lib{grid-template-columns:minmax(0,1fr)}}
+.lib button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:28px 48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border-radius:8px}
+.lib button:hover{background:rgba(255,255,255,.06)}
+.lib button:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.lib .no{font-family:var(--f-mono);font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.lib .thumb{width:48px;height:32px;border-radius:3px;background-size:cover;background-position:center;background-color:#222;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.lib .t{min-width:0}
+.lib .t b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lib .t i{display:block;font-style:normal;font-size:12px;color:var(--ink-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lib .d{font-family:var(--f-mono);font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.lib li.active .no,.lib li.active .t b{color:var(--amber)}
+.lib li.active .thumb{box-shadow:inset 0 0 0 1px var(--amber)}
+.note{margin:4px 12px 0;color:var(--ink-faint);font-size:12px}
+
+@media (prefers-reduced-motion:reduce){.bg{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div class="bg" id="bgA"></div><div class="bg" id="bgB"></div><div class="veil"></div>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <span class="en">Daum Kim · Sound Archive</span>
+      <h1>유리된 것들의 가청화</h1>
+    </div>
+    <a href="https://kimdaum.com" target="_blank" rel="noopener">kimdaum.com ↗</a>
+  </header>
+
+  <div class="stage" id="stage" aria-label="KD 아카이브 데크">
+    <canvas id="deck"></canvas>
+    <div class="loading" id="loading">릴을 거는 중…</div>
+  </div>
+
+  <div class="mobile-bar" role="group" aria-label="재생 조작">
+    <button id="mD" aria-label="이전 음원">◀◀</button><button id="mA" aria-label="재생">▶</button><button id="mB" aria-label="정지">■</button><button id="mC" aria-label="다음 음원">▶▶</button>
+  </div>
+  <p class="hint">A 재생 · B 정지 · C 다음 · D 이전 &nbsp;|&nbsp; 노브는 위아래로 드래그 &nbsp;|&nbsp; <kbd>Space</kbd> <kbd>←</kbd> <kbd>→</kbd></p>
+
+  <section class="shelf" aria-labelledby="shelfTitle">
+    <div class="shelf-head"><h2 id="shelfTitle">릴 목록</h2><span id="libCount"></span></div>
+    <ol class="lib" id="lib"></ol>
+    <p class="note">지금 음원은 브라우저에서 만든 데모이고, 배경은 전시 전경 사진입니다. 실제 작업으로 교체하면 같은 방식으로 재생됩니다.</p>
+  </section>
+</div>
+
+<script>
+/* =========================================================
+   아카이브 목록 — 이 부분만 고치면 됩니다.
+   src : 음원 경로 (예: "audio/01-blood-harmony.mp3"). null이면 데모 음원.
+   bg  : 배경 이미지 경로 (jpg, webp, png). 트랙이 바뀔 때 천천히 바뀝니다.
+   ========================================================= */
+const TRACKS = [
+  { title: "샘플 01 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg01.webp" },
+  { title: "샘플 02 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg02.webp" },
+  { title: "샘플 03 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg03.webp" },
+  { title: "샘플 04 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg04.webp" },
+  { title: "샘플 05 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg05.webp" },
+  { title: "샘플 06 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg06.webp" },
+  { title: "샘플 07 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg07.webp" },
+  { title: "샘플 08 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg08.webp" },
+  { title: "샘플 09 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg09.webp" },
+  { title: "샘플 10 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg10.webp" },
+  { title: "샘플 11 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg11.webp" },
+  { title: "샘플 12 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg12.webp" },
+];
+const DECK = "deck/";
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const fmt = s => { if (!isFinite(s)) s = 0; s = Math.floor(s); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+const ipsText = r => { const v = 7.5*r, f = {3.75:"3¾",7.5:"7½",15:"15"}[Math.round(v*100)/100]; return (f || v.toFixed(2)) + " IPS"; };
+const loadImg = src => new Promise((res, rej) => { const im = new Image(); im.decoding = "async"; im.onload = () => res(im); im.onerror = () => rej(new Error("이미지를 불러오지 못했어요: " + src)); im.src = src; });
+
+/* ---------- demo audio (브라우저에서 합성) ---------- */
+const demoCache = {}, durations = {};
+function toWav(buf){
+  const ch=buf.numberOfChannels, len=buf.length, sr=buf.sampleRate, bytes=len*ch*2;
+  const ab=new ArrayBuffer(44+bytes), dv=new DataView(ab); let o=0;
+  const s=t=>{for(let i=0;i<t.length;i++)dv.setUint8(o++,t.charCodeAt(i));}, u32=n=>{dv.setUint32(o,n,true);o+=4;}, u16=n=>{dv.setUint16(o,n,true);o+=2;};
+  s("RIFF");u32(36+bytes);s("WAVE");s("fmt ");u32(16);u16(1);u16(ch);u32(sr);u32(sr*ch*2);u16(ch*2);u16(16);s("data");u32(bytes);
+  const data=[...Array(ch)].map((_,c)=>buf.getChannelData(c));
+  for(let i=0;i<len;i++)for(let c=0;c<ch;c++){const x=clamp(data[c][i],-1,1);dv.setInt16(o,x<0?x*0x8000:x*0x7fff,true);o+=2;}
+  return new Blob([ab],{type:"audio/wav"});
+}
+async function renderDemo(i){
+  const sr=22050, dur=26+(i*7)%15, oc=new OfflineAudioContext(2,sr*dur,sr);
+  const master=oc.createGain(); master.connect(oc.destination);
+  master.gain.setValueAtTime(0,0); master.gain.linearRampToValueAtTime(0.9,2.5);
+  master.gain.setValueAtTime(0.9,dur-3); master.gain.linearRampToValueAtTime(0,dur);
+  const pan=(node,p)=>{const sp=oc.createStereoPanner();sp.pan.value=p;node.connect(sp);sp.connect(master);return sp;};
+  const nb=oc.createBuffer(1,sr*2,sr), nd=nb.getChannelData(0); for(let k=0;k<nd.length;k++)nd[k]=Math.random()*2-1;
+  const noise=()=>{const n=oc.createBufferSource();n.buffer=nb;n.loop=true;n.start();return n;};
+  { const hp=oc.createBiquadFilter();hp.type="highpass";hp.frequency.value=5000;const g=oc.createGain();g.gain.value=0.02;noise().connect(hp);hp.connect(g);g.connect(master); }
+  const base=[55,61.7,65.4,73.4,82.4,98][i%6]; const kind=i%4;
+  if(kind===0){
+    const lp=oc.createBiquadFilter();lp.type="lowpass";lp.frequency.value=420;lp.Q.value=4;
+    const lfo=oc.createOscillator(),lg=oc.createGain();lfo.frequency.value=0.06+i*0.01;lg.gain.value=300;lfo.connect(lg);lg.connect(lp.frequency);lfo.start();
+    const mix=oc.createGain();mix.gain.value=0.5;lp.connect(mix);
+    const sp1=oc.createStereoPanner(), sp2=oc.createStereoPanner(); sp1.pan.value=-0.7; sp2.pan.value=0.7;
+    [1,1.006,1.5,2.003].forEach(m=>{const o=oc.createOscillator();o.type="sawtooth";o.frequency.value=base*m;const g=oc.createGain();g.gain.value=0.11;o.connect(g);g.connect(lp);o.start();});
+    mix.connect(sp1);sp1.connect(master); const d=oc.createDelay(1);d.delayTime.value=0.37;mix.connect(d);d.connect(sp2);sp2.connect(master);
+  } else if(kind===1){
+    const step=60/(68+i*4), notes=[4,5,6,8,6,5];
+    for(let t=0.5,k=0;t<dur-1;t+=step,k++){
+      const o=oc.createOscillator();o.type="sine";o.frequency.value=base*notes[k%notes.length];
+      const g=oc.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.35,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+step*0.9);
+      o.connect(g);pan(g,k%2?0.75:-0.75);o.start(t);o.stop(t+step);
+    }
+    const o=oc.createOscillator();o.frequency.value=base;const g=oc.createGain();g.gain.value=0.12;o.connect(g);pan(g,0);o.start();
+  } else if(kind===2){
+    const bp=oc.createBiquadFilter();bp.type="bandpass";bp.Q.value=7;
+    bp.frequency.setValueAtTime(180,0);bp.frequency.exponentialRampToValueAtTime(3200,dur*0.5);bp.frequency.exponentialRampToValueAtTime(240,dur);
+    const g=oc.createGain();g.gain.value=1.1;noise().connect(bp);bp.connect(g);
+    const sp=oc.createStereoPanner();const lfo=oc.createOscillator(),lg=oc.createGain();lfo.frequency.value=0.18;lg.gain.value=0.9;lfo.connect(lg);lg.connect(sp.pan);lfo.start();
+    g.connect(sp);sp.connect(master);
+    const o=oc.createOscillator();o.frequency.value=base;const og=oc.createGain();og.gain.value=0.1;o.connect(og);pan(og,0);o.start();
+  } else {
+    [1,1.26,1.5,1.89,2.52].forEach((m,k)=>{
+      const o=oc.createOscillator();o.type="triangle";o.frequency.value=base*2*m;
+      const g=oc.createGain();g.gain.value=0.05;const lfo=oc.createOscillator(),lg=oc.createGain();lfo.frequency.value=0.05+k*0.031;lg.gain.value=0.05;lfo.connect(lg);lg.connect(g.gain);lfo.start();
+      o.connect(g);pan(g,-0.9+k*0.45);o.start();
+    });
+  }
+  const buf=await oc.startRendering(); durations[i]=dur; return URL.createObjectURL(toWav(buf));
+}
+const getDemoUrl = i => demoCache[i] || (demoCache[i] = renderDemo(i));
+
+/* ---------- player ---------- */
+const N=TRACKS.length, audio=new Audio(); audio.preload="auto";
+let idx=0, loadedIdx=-1, loadToken=0, rate=1, vol=7, ctx=null, gainNode=null, anL=null, anR=null, status="";
+function ensureGraph(){
+  if(ctx) return;
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const src=ctx.createMediaElementSource(audio);
+  gainNode=ctx.createGain(); gainNode.channelCount=2; gainNode.channelCountMode="explicit"; gainNode.channelInterpretation="speakers";
+  src.connect(gainNode); gainNode.connect(ctx.destination);
+  const sp=ctx.createChannelSplitter(2); gainNode.connect(sp);
+  anL=ctx.createAnalyser(); anR=ctx.createAnalyser(); anL.fftSize=anR.fftSize=1024;
+  sp.connect(anL,0); sp.connect(anR,1); applyVolume();
+}
+function applyVolume(){ if(gainNode) gainNode.gain.setTargetAtTime(Math.pow(vol/10,2),ctx.currentTime,0.02); }
+function applyRate(){ audio.preservesPitch=false; audio.mozPreservesPitch=false; audio.webkitPreservesPitch=false; audio.defaultPlaybackRate=rate; audio.playbackRate=rate; }
+async function loadTrack(i, autoplay){
+  idx=(i+N)%N; const my=++loadToken; const t=TRACKS[idx];
+  setBackground(t.bg);
+  status = t.src ? "LOADING" : "THREADING TAPE"; renderList();
+  let url=t.src; if(!url){ try{ url=await getDemoUrl(idx); }catch(e){ status="데모 음원을 만들 수 없어요"; return; } }
+  if(my!==loadToken) return;
+  audio.src=url; loadedIdx=idx; status=""; applyRate(); renderList();
+  if(autoplay) await play();
+}
+async function play(){
+  ensureGraph(); if(ctx.state!=="running") await ctx.resume();
+  if(loadedIdx!==idx){ await loadTrack(idx,false); }
+  applyRate();
+  try{ await audio.play(); }catch(e){ if(e.name!=="AbortError") status="재생할 수 없어요"; }
+}
+function stop(){ audio.pause(); }
+function next(){ loadTrack(idx+1, !audio.paused); }
+function prev(){ if(audio.currentTime>3 && loadedIdx===idx){ audio.currentTime=0; return; } loadTrack(idx-1, !audio.paused); }
+audio.addEventListener("loadedmetadata",()=>{ if(isFinite(audio.duration)) durations[loadedIdx]=audio.duration; renderList(); });
+audio.addEventListener("ended",()=>loadTrack(idx+1,true));
+audio.addEventListener("error",()=>{ const t=TRACKS[loadedIdx]; if(t&&t.src) status="파일 없음: "+t.src; });
+
+/* ---------- background crossfade ---------- */
+let bgFront=$("bgA"), bgBack=$("bgB"), bgCurrent=null;
+function setBackground(src){
+  if(!src || src===bgCurrent) return; bgCurrent=src;
+  const im=new Image(); im.onload=()=>{ if(bgCurrent!==src) return;
+    bgBack.style.backgroundImage=`url("${src}")`; bgBack.classList.add("on"); bgFront.classList.remove("on");
+    [bgFront,bgBack]=[bgBack,bgFront]; };
+  im.src=src;
+}
+
+/* ---------- track list ---------- */
+function renderList(){
+  const ol=$("lib");
+  if(!ol.children.length){
+    TRACKS.forEach((t,i)=>{
+      const li=document.createElement("li"), b=document.createElement("button");
+      b.innerHTML=`<span class="no">${String(i+1).padStart(2,"0")}</span><span class="thumb"></span><span class="t"><b></b><i></i></span><span class="d"></span>`;
+      b.querySelector("b").textContent=t.title; b.querySelector("i").textContent=t.meta||"";
+      if(t.bg) b.querySelector(".thumb").style.backgroundImage=`url("${t.bg}")`;
+      b.onclick=()=>loadTrack(i,true); li.appendChild(b); ol.appendChild(li);
+    });
+    $("libCount").textContent=`${N} reels`;
+  }
+  [...ol.children].forEach((li,i)=>{
+    li.classList.toggle("active",i===idx);
+    li.querySelector("button").setAttribute("aria-current",i===idx?"true":"false");
+    const d = durations[i] ?? (TRACKS[i].src ? null : 26+(i*7)%15);
+    li.querySelector(".d").textContent = d ? fmt(d) : "—";
+  });
+}
+
+/* =========================================================
+   데크 렌더링 (Blender 레이어 + 원근 투영)
+   ========================================================= */
+let L=null, IMG={}, PATCH={}, ready=false;
+const canvas=$("deck"), g=canvas.getContext("2d");
+let K=1;   // 캔버스 px / 기준 1600
+
+function project(v){
+  const m=L.mvp, x=v[0], y=v[1], z=v[2];
+  const cx=m[0][0]*x+m[0][1]*y+m[0][2]*z+m[0][3];
+  const cy=m[1][0]*x+m[1][1]*y+m[1][2]*z+m[1][3];
+  const cw=m[3][0]*x+m[3][1]*y+m[3][2]*z+m[3][3];
+  return [((cx/cw+1)/2*1600)*K, ((1-cy/cw)/2*1000)*K];
+}
+function drawBox(img, box, sy=0, sh=null){
+  const [x0,y0,x1,y1]=box; const sw=img.naturalWidth; sh = sh ?? img.naturalHeight;
+  g.drawImage(img, 0, sy, sw, sh, x0*K, y0*K, (x1-x0)*K, (y1-y0)*K);
+}
+function feather(img, px){
+  const c=document.createElement("canvas"); c.width=img.naturalWidth; c.height=img.naturalHeight;
+  const x=c.getContext("2d"); x.drawImage(img,0,0); x.globalCompositeOperation="destination-out";
+  const W=c.width, H=c.height;
+  const edge=(x0,y0,x1,y1,rx,ry,rw,rh)=>{ const gr=x.createLinearGradient(x0,y0,x1,y1); gr.addColorStop(0,"rgba(0,0,0,1)"); gr.addColorStop(1,"rgba(0,0,0,0)"); x.fillStyle=gr; x.fillRect(rx,ry,rw,rh); };
+  edge(0,0,px,0, 0,0,px,H); edge(W,0,W-px,0, W-px,0,px,H); edge(0,0,0,px, 0,0,W,px); edge(0,H,0,H-px, 0,H-px,W,px);
+  return c;
+}
+
+async function initDeck(){
+  const res = await fetch(DECK+"layout.json"); L = await res.json();
+  const Ly=L.layers, jobs=[];
+  const want = { plate:Ly.plate.file, glassL:Ly.glass[0].file, glassR:Ly.glass[1].file,
+    reelL:Ly.reels[0].file, reelR:Ly.reels[1].file, knobV:Ly.knobs.volume.file, knobS:Ly.knobs.speed.file, pinch:Ly.pinch.file };
+  for(const [k,f] of Object.entries(want)) jobs.push(loadImg(DECK+f).then(im=>IMG[k]=im));
+  for(const p of Ly.key_patches) jobs.push(loadImg(DECK+p.file).then(im=>PATCH[p.letter]={img:feather(im,6), box:p.box}));
+  await Promise.all(jobs);
+  ready=true; $("loading").hidden=true; buildHits(); resize();
+}
+
+/* ---------- 감긴 테이프 · 테이프 띠 ---------- */
+const PACK_SIDE="#100f0e", PACK_TOP="#1d1b19";
+function circlePts(c, r, z, n=72){ const out=[]; for(let i=0;i<n;i++){ const a=i/n*Math.PI*2; out.push(project([c[0]+r*Math.cos(a), c[1]+r*Math.sin(a), z])); } return out; }
+function poly(pts){ g.beginPath(); g.moveTo(pts[0][0],pts[0][1]); for(let i=1;i<pts.length;i++) g.lineTo(pts[i][0],pts[i][1]); g.closePath(); }
+function drawPack(reel, r){
+  const [z0,z1]=reel.pack_z, c=reel.center, bot=circlePts(c,r,z0), top=circlePts(c,r,z1);
+  g.fillStyle=PACK_SIDE;
+  for(let i=0;i<bot.length;i++){ const j=(i+1)%bot.length; g.beginPath(); g.moveTo(...bot[i]); g.lineTo(...bot[j]); g.lineTo(...top[j]); g.lineTo(...top[i]); g.closePath(); g.fill(); }
+  poly(top); g.fillStyle=PACK_TOP; g.fill();
+  // 감긴 층의 결
+  g.lineWidth=Math.max(.5,.6*K);
+  const rmin=L.pack_r[0];
+  for(let k=1;k<=6;k++){ const rr=rmin+(r-rmin)*k/6.4; if(rr<=rmin+.002) continue; poly(circlePts(c,rr,z1,56)); g.strokeStyle=`rgba(255,255,255,${k===6?.08:.035})`; g.stroke(); }
+  // 윗면 반사
+  poly(top); const p0=project([c[0]-r,c[1]+r,z1]), p1=project([c[0]+r,c[1]-r,z1]);
+  const gr=g.createLinearGradient(p0[0],p0[1],p1[0],p1[1]); gr.addColorStop(0,"rgba(255,255,255,0)"); gr.addColorStop(.55,"rgba(255,255,255,.05)"); gr.addColorStop(1,"rgba(255,255,255,0)");
+  g.fillStyle=gr; g.fill();
+}
+function tangentOuter(c,r,p,sign){
+  const dx=p[0]-c[0], dy=p[1]-c[1], d=Math.hypot(dx,dy), a=Math.atan2(dy,dx), b=Math.acos(Math.min(1,r/d));
+  const c1=[c[0]+r*Math.cos(a+b), c[1]+r*Math.sin(a+b)], c2=[c[0]+r*Math.cos(a-b), c[1]+r*Math.sin(a-b)];
+  return (c1[0]-c2[0])*sign>0 ? c1 : c2;
+}
+function tapePath(rL, rR){
+  const [R0,R1]=L.rollers, lc=R0.center, rc=R1.center, R=R0.r;
+  const pl=[lc[0]-R, lc[1]], pr=[rc[0]+R, rc[1]];
+  const pts=[tangentOuter(L.reels[0].center,rL,pl,-1), pl];
+  for(let k=1;k<=10;k++){ const a=Math.PI+Math.PI/2*k/10; pts.push([lc[0]+R*Math.cos(a), lc[1]+R*Math.sin(a)]); }
+  for(let k=0;k<=10;k++){ const a=1.5*Math.PI+Math.PI/2*k/10; pts.push([rc[0]+R*Math.cos(a), rc[1]+R*Math.sin(a)]); }
+  pts.push(tangentOuter(L.reels[1].center,rR,pr,1));
+  return pts;
+}
+function drawTape(rL, rR){
+  const [z0,z1]=L.tape.z, pts=tapePath(rL,rR);
+  const top=pts.map(p=>project([p[0],p[1],z1])), bot=pts.map(p=>project([p[0],p[1],z0]));
+  g.beginPath(); g.moveTo(...top[0]); for(const p of top.slice(1)) g.lineTo(...p); for(const p of bot.reverse()) g.lineTo(...p); g.closePath();
+  g.fillStyle="#151311"; g.fill();
+  g.beginPath(); g.moveTo(...top[0]); for(const p of top.slice(1)) g.lineTo(...p);
+  g.strokeStyle="rgba(170,160,145,.5)"; g.lineWidth=Math.max(.5,.6*K); g.stroke();
+}
+
+/* ---------- 미터 바늘 ---------- */
+const amp = db => Math.pow(10,db/20);
+function vuAngle(n, db){ db=clamp(db,n.db_min,n.db_max+1); return -n.span_deg + 2*n.span_deg*(amp(db)-amp(n.db_min))/(amp(n.db_max)-amp(n.db_min)); }
+function drawNeedle(n, deg){
+  const a=deg*Math.PI/180, p=n.pivot, tip=[p[0]+n.length*Math.sin(a), p[1], p[2]+n.length*Math.cos(a)];
+  const P0=project(p), P1=project(tip);
+  g.lineCap="round";
+  g.strokeStyle="rgba(0,0,0,.16)"; g.lineWidth=2.2*K; g.beginPath(); g.moveTo(P0[0]+1.6*K,P0[1]+2*K); g.lineTo(P1[0]+1.6*K,P1[1]+2*K); g.stroke();
+  g.strokeStyle="#151412"; g.lineWidth=1.5*K; g.beginPath(); g.moveTo(...P0); g.lineTo(...P1); g.stroke();
+}
+
+/* ---------- 카운터 창 ---------- */
+function drawDisplay(){
+  const d=L.display, TL=project(d[0]), TR=project(d[1]), BL=project(d[3]);
+  const W=750, H=190;
+  g.save();
+  g.setTransform((TR[0]-TL[0])/W, (TR[1]-TL[1])/W, (BL[0]-TL[0])/H, (BL[1]-TL[1])/H, TL[0], TL[1]);
+  g.beginPath(); g.rect(0,0,W,H); g.clip();
+  const t=TRACKS[idx];
+  g.fillStyle="#ffb547"; g.shadowColor="rgba(255,170,60,.75)"; g.shadowBlur=7*K; g.textBaseline="alphabetic";
+  g.font="500 58px 'IBM Plex Sans KR', sans-serif";
+  const title=`${String(idx+1).padStart(2,"0")}  ${t.title}`;
+  let tw=g.measureText(title).width, x=28;
+  const avail=W-56;
+  if(tw>avail && !audio.paused){ const off=(performance.now()/40)%(tw+120); x=28-off; g.fillText(title,x,82); g.fillText(title,x+tw+120,82); }
+  else { g.fillText(title,28,82,avail); }
+  g.font="500 50px 'IBM Plex Mono', monospace"; g.fillStyle="#e9a03c";
+  const cur = loadedIdx===idx ? audio.currentTime : 0, dur = isFinite(audio.duration)&&loadedIdx===idx ? audio.duration : (durations[idx]||0);
+  g.fillText(`${fmt(cur)} / ${fmt(dur)}`, 28, 160);
+  g.textAlign="right"; g.fillText(status || ipsText(rate), W-28, 160);
+  g.restore();
+}
+
+/* ---------- 노브 · 버튼 히트 영역 ---------- */
+const keyDown={A:false,B:false,C:false,D:false};
+const knobVal={volume:7, speed:0};
+function pct(box){ const [x0,y0,x1,y1]=box; return {left:x0/16+"%", top:y0/10+"%", width:(x1-x0)/16+"%", height:(y1-y0)/10+"%"}; }
+function buildHits(){
+  const stage=$("stage");
+  const actions={A:play,B:stop,C:next,D:prev}, labels={A:"재생",B:"정지",C:"다음 음원",D:"이전 음원"};
+  for(const k of L.layers.keys){
+    const b=document.createElement("button"); b.className="hit"; b.setAttribute("aria-label",`${k.letter} — ${labels[k.letter]}`);
+    Object.assign(b.style,pct(k.box));
+    const press=()=>{ keyDown[k.letter]=true; };
+    const release=()=>{ setTimeout(()=>{ keyDown[k.letter]=false; },140); };
+    b.addEventListener("pointerdown",press); b.addEventListener("pointerup",release); b.addEventListener("pointerleave",()=>keyDown[k.letter]&&release());
+    b.addEventListener("click",()=>{ actions[k.letter](); if(!keyDown[k.letter]){ keyDown[k.letter]=true; release(); } });
+    stage.appendChild(b);
+  }
+  makeKnob("volume", {min:0,max:10,step:.5,text:v=>`${v.toFixed(1)} / 10`, label:"볼륨", onInput:v=>{vol=v;applyVolume();}});
+  makeKnob("speed", {min:-1,max:1,step:.05,snap:0,text:v=>ipsText(Math.pow(2,v)), label:"테이프 속도", onInput:v=>{rate=Math.pow(2,v);applyRate();}});
+}
+function makeKnob(key,{min,max,step,snap,text,label,onInput}){
+  const el=document.createElement("div"); el.className="hit knob-hit"; el.tabIndex=0; el.setAttribute("role","slider"); el.setAttribute("aria-label",label);
+  Object.assign(el.style,pct(L.layers.knobs[key].box)); $("stage").appendChild(el);
+  const def=knobVal[key];
+  const set=nv=>{ let v=clamp(nv,min,max); if(snap!=null && Math.abs(v-snap)<(max-min)*.02) v=snap; knobVal[key]=v;
+    el.setAttribute("aria-valuemin",min); el.setAttribute("aria-valuemax",max); el.setAttribute("aria-valuenow",v.toFixed(2)); el.setAttribute("aria-valuetext",text(v)); onInput(v); };
+  let sy=0, sv=0, drag=false;
+  el.addEventListener("pointerdown",e=>{drag=true;sy=e.clientY;sv=knobVal[key];el.setPointerCapture(e.pointerId);el.focus();e.preventDefault();});
+  el.addEventListener("pointermove",e=>{ if(drag) set(sv+(sy-e.clientY)/160*(max-min)); });
+  const end=()=>{drag=false;}; el.addEventListener("pointerup",end); el.addEventListener("pointercancel",end);
+  el.addEventListener("wheel",e=>{e.preventDefault(); set(knobVal[key]-Math.sign(e.deltaY)*step);},{passive:false});
+  el.addEventListener("keydown",e=>{
+    if(["ArrowUp","ArrowRight"].includes(e.key)){set(knobVal[key]+step);e.preventDefault();e.stopPropagation();}
+    else if(["ArrowDown","ArrowLeft"].includes(e.key)){set(knobVal[key]-step);e.preventDefault();e.stopPropagation();}
+  });
+  el.addEventListener("dblclick",()=>set(def));
+  set(def);
+}
+const knobFrame = (key) => { const kn=L.layers.knobs[key], t = key==="volume" ? knobVal.volume/10 : (knobVal.speed+1)/2; return Math.round(clamp(t,0,1)*(kn.frames-1)); };
+
+/* ---------- resize ---------- */
+function resize(){
+  const r=canvas.getBoundingClientRect(), dpr=Math.min(2, window.devicePixelRatio||1);
+  canvas.width=Math.round(r.width*dpr); canvas.height=Math.round(r.height*dpr); K=canvas.width/1600;
+}
+new ResizeObserver(()=>ready&&resize()).observe($("stage"));
+
+/* ---------- frame loop ---------- */
+let last=performance.now(), tapeV=0, rot=[0,0], needleDeg=[null,null];
+const tdBuf=new Float32Array(1024);
+function rms(an){ an.getFloatTimeDomainData(tdBuf); let s=0; for(let i=0;i<tdBuf.length;i++) s+=tdBuf[i]*tdBuf[i]; return Math.sqrt(s/tdBuf.length); }
+const TAPE_SPEED=0.18;   // m/s (화면용)
+function frame(now){
+  const dt=Math.min(.1,(now-last)/1000); last=now;
+  if(ready){
+    const playing=!audio.paused;
+    tapeV += ((playing?TAPE_SPEED*rate:0)-tapeV)*(1-Math.exp(-dt/.35));
+    const p=(loadedIdx===idx && isFinite(audio.duration) && audio.duration>0) ? clamp(audio.currentTime/audio.duration,0,1) : 0;
+    const [rmin,rmax]=L.pack_r, area=rmax*rmax-rmin*rmin;
+    const rr=[Math.sqrt(rmin*rmin+(1-p)*area), Math.sqrt(rmin*rmin+p*area)];
+    for(let i=0;i<2;i++) rot[i]=(rot[i]+tapeV/rr[i]*dt*180/Math.PI)%360;   // 반시계(위에서 볼 때)
+
+    g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,canvas.width,canvas.height);
+    const Ly=L.layers;
+    drawBox(IMG.plate, Ly.plate.box);
+    drawPack(L.reels[0], rr[0]); drawPack(L.reels[1], rr[1]);
+    drawTape(rr[0], rr[1]);
+    [IMG.reelL, IMG.reelR].forEach((im,i)=>{
+      const R=Ly.reels[i], fh=im.naturalHeight/R.frames;
+      const f=((Math.round(-rot[i]/R.deg_per_frame)%R.frames)+R.frames)%R.frames;   // 프레임은 시계 방향으로 4°씩
+      drawBox(im, R.box, f*fh, fh);
+    });
+    drawBox(IMG.pinch, Ly.pinch.box);
+    [["volume",IMG.knobV],["speed",IMG.knobS]].forEach(([k,im])=>{ const kn=Ly.knobs[k], fh=im.naturalHeight/kn.frames; drawBox(im, kn.box, knobFrame(k)*fh, fh); });
+    for(const l of "ABCD") if((keyDown[l] || (l==="A" && playing)) && PATCH[l]){ const P=PATCH[l], [x0,y0,x1,y1]=P.box; g.drawImage(P.img, x0*K, y0*K, (x1-x0)*K, (y1-y0)*K); }
+    L.needles.forEach((n,i)=>{
+      let target=-n.span_deg-4;
+      if(anL && playing){ const lv=rms(i?anR:anL); target=vuAngle(n, 20*Math.log10(lv+1e-9)+18); }
+      if(needleDeg[i]==null) needleDeg[i]=target;
+      needleDeg[i]+=(target-needleDeg[i])*(1-Math.exp(-dt/.09));
+      drawNeedle(n, needleDeg[i]);
+    });
+    drawBox(IMG.glassL, Ly.glass[0].box); drawBox(IMG.glassR, Ly.glass[1].box);
+    drawDisplay();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- 연결 ---------- */
+$("mA").onclick=play; $("mB").onclick=stop; $("mC").onclick=next; $("mD").onclick=prev;
+document.addEventListener("keydown",e=>{
+  const el=document.activeElement; if(el && (el.getAttribute("role")==="slider")) return;
+  if(e.code==="Space"){ if(el && el.tagName==="BUTTON") return; e.preventDefault(); audio.paused?play():stop(); }
+  else if(e.key==="ArrowRight"){ e.preventDefault(); next(); }
+  else if(e.key==="ArrowLeft"){ e.preventDefault(); prev(); }
+});
+renderList(); setBackground(TRACKS[0].bg);
+initDeck().catch(err=>{ $("loading").textContent=err.message; });
+requestAnimationFrame(frame);
+</script>
+
+</body>
+</html>
