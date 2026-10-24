@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Sound Archive — Daum Kim</title>
+<title>소리들 : 정령들의 부동산 : 인터뷰</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Nanum+Myeongjo:wght@700;800&display=swap">
@@ -34,12 +34,7 @@ body{font-family:var(--f-body);font-size:15px;line-height:1.6;min-height:100%;
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 
 header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-top:max(20px,env(safe-area-inset-top,0px))}
-.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
-.brand .en{font-family:var(--f-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--ink-dim)}
-.brand h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,32px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance;text-shadow:0 1px 18px rgba(0,0,0,.5)}
-header a{color:var(--ink-dim);font-family:var(--f-label);letter-spacing:.12em;text-transform:uppercase;font-size:12px;text-decoration:none;white-space:nowrap}
-header a:hover{color:var(--ink)}
-header a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,32px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance;text-shadow:0 1px 18px rgba(0,0,0,.5)}
 
 /* ---------- 데크 ---------- */
 .stage{position:relative;width:100%;max-width:100%;aspect-ratio:1600/1000;margin-top:-1%}
@@ -89,11 +84,7 @@ header a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 
 <div class="wrap">
   <header>
-    <div class="brand">
-      <span class="en">Daum Kim · Sound Archive</span>
-      <h1>유리된 것들의 가청화</h1>
-    </div>
-    <a href="https://kimdaum.com" target="_blank" rel="noopener">kimdaum.com ↗</a>
+    <h1>소리들 : 정령들의 부동산 : 인터뷰</h1>
   </header>
 
   <div class="stage" id="stage" aria-label="KD 아카이브 데크">
@@ -297,6 +288,8 @@ async function initDeck(){
   const want = { plate:Ly.plate.file, glassL:Ly.glass[0].file, glassR:Ly.glass[1].file,
     reelL:Ly.reels[0].file, reelR:Ly.reels[1].file, knobV:Ly.knobs.volume.file, knobS:Ly.knobs.speed.file, pinch:Ly.pinch.file };
   for(const [k,f] of Object.entries(want)) jobs.push(loadImg(DECK+f).then(im=>IMG[k]=im));
+  IMG.rollerTops=[];
+  (Ly.roller_tops||[]).forEach((t,i)=>jobs.push(loadImg(DECK+t.file).then(im=>IMG.rollerTops[i]={img:im, box:t.box})));
   for(const p of Ly.key_patches) jobs.push(loadImg(DECK+p.file).then(im=>PATCH[p.letter]={img:feather(im,6), box:p.box}));
   await Promise.all(jobs);
   ready=true; $("loading").hidden=true; buildHits(); resize();
@@ -442,6 +435,7 @@ function frame(now){
     drawBox(IMG.plate, Ly.plate.box);
     drawPack(L.reels[0], rr[0]); drawPack(L.reels[1], rr[1]);
     drawTape(rr[0], rr[1]);
+    for(const t of IMG.rollerTops) if(t) drawBox(t.img, t.box);   // 롤러 위 플랜지가 테이프를 덮음
     [IMG.reelL, IMG.reelR].forEach((im,i)=>{
       const R=Ly.reels[i], fh=im.naturalHeight/R.frames;
       const f=((Math.round(-rot[i]/R.deg_per_frame)%R.frames)+R.frames)%R.frames;   // 프레임은 시계 방향으로 4°씩
