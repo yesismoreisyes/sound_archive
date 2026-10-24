@@ -47,9 +47,10 @@ Blender 스크립트 `tape_deck.py`로 렌더한 레이어입니다. 웹페이�
 | `key_A_down.webp` … `key_D_down.webp` | 눌린 버튼 |
 | `glass_L.webp`, `glass_R.webp` | 미터 유리와 테두리 |
 | `pinch.webp` | 테이프 앞 핀치 롤러 |
+| `roller_top_L.webp`, `roller_top_R.webp` | 가이드 롤러 위 플랜지 (테이프 위에 덮어 그림) |
 | `layout.json` | 레이어 위치, 카메라 투영 행렬 |
 
-모양이나 각도를 바꾸려면 Blender에서 다시 렌더하고 이 폴더의 파일만 교체하면 됩니다.
+모양이나 각도를 바꾸려면 Blender에서 다시 렌더하고 이 폴더의 파일만 교체하면 됩니다. 본체만 바뀌었으면 `MODE = "plate"`(5분)로 충분합니다.
 
 ## 공개하기 (GitHub Pages)
 

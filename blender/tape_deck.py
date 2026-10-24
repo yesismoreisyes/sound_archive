@@ -4,7 +4,8 @@ KD Archive Deck (Portable) — Blender 4.0 build & layer render script
 Blender > Scripting 탭 > Text > Open 으로 이 파일을 열고 ▶ Run Script.
 
 1) MODE = "preview" : 장면을 만들고 원근 미리보기 한 장만 렌더 (2~4분)
-2) MODE = "all"     : 웹사이트용 레이어 전부 렌더 (20~30분)
+2) MODE = "plate"   : 본체 · 롤러 위 플랜지 · layout.json만 다시 렌더 (5분 안팎)
+3) MODE = "all"     : 웹사이트용 레이어 전부 렌더 (20~30분)
    - 릴 회전 프레임, 노브 프레임, 버튼, 미터 유리, 본체, 카메라 투영 정보(layout.json)
    렌더하는 동안 Blender 화면이 멈춘 것처럼 보이는 건 정상입니다.
 
@@ -17,7 +18,7 @@ from bpy_extras.object_utils import world_to_camera_view
 # ------------------------------------------------------------------
 # 설정
 # ------------------------------------------------------------------
-MODE        = "preview"   # "preview" 또는 "all"
+MODE        = "preview"   # "preview", "plate"(본체·롤러·layout만, 5분), "all"(전부, 20~30분)
 SCALE       = 2           # 2 = 레티나용 3200x2000 기준
 SAMPLES     = 64          # 노이즈가 보이면 128
 REEL_FRAMES = 30          # 릴 120° 회전을 몇 장으로 나눌지
@@ -35,10 +36,10 @@ FRONT_Y = -BD / 2
 # 윗면 (TOP 로컬 좌표: x, y = 윗면 위 위치, z = 윗면에서 높이)
 REEL_C   = [(-0.085, 0.045), (0.085, 0.045)]
 REEL_R, PACK_R, HUB_R = 0.065, 0.058, 0.012
-PACK_Z   = (0.006, 0.010)                     # 감긴 테이프 아래·위 높이
+PACK_Z   = (0.0051, 0.0113)                   # 감긴 테이프 아래·위 높이 (1/4인치 폭)
 ROLLERS  = [(-0.135, -0.06), (0.135, -0.06)]
 ROLLER_R = 0.011
-TAPE_Z   = (0.0045, 0.011)                    # 테이프 띠 아래·위 높이
+TAPE_Z   = (0.0051, 0.0113)                   # 테이프 띠 아래·위 높이 (롤러 홈 안)
 TAPE_Y   = ROLLERS[0][1] - ROLLER_R
 
 # 앞면 (FRONT 로컬 좌표: x, y = 바닥에서 높이, z = 앞면에서 튀어나온 거리)
@@ -309,9 +310,14 @@ reg(on(TOP, cyl("Capstan", 0.058, TAPE_Y + 0.0035, 0.009, 0.0028, 0.016, M["chro
 reg(on(TOP, cyl("Pinch Roller", 0.058, TAPE_Y - 0.0085, 0.008, 0.008, 0.012, M["rubber"])), "plate")
 reg(on(TOP, cyl("Pinch Cap", 0.058, TAPE_Y - 0.0085, 0.0142, 0.003, 0.0006, M["chrome"], seg=32)), "plate")
 for i, (rx, ry) in enumerate(ROLLERS):
-    reg(on(TOP, cyl(f"Roller Base {i}", rx, ry, 0.002, ROLLER_R + 0.003, 0.004, M["rubber"])), "plate")
-    reg(on(TOP, cyl(f"Roller {i}", rx, ry, 0.011, ROLLER_R, 0.02, M["satin"])), "plate")
-    reg(on(TOP, cyl(f"Roller Screw {i}", rx, ry, 0.0212, 0.0018, 0.0004, M["hub"], seg=24)), "plate")
+    # 가이드 롤러: 아래 플랜지 · 테이프가 감기는 홈 · 위 플랜지 · 캡
+    s = "LR"[i]
+    reg(on(TOP, cyl(f"Roller Base {i}", rx, ry, 0.0015, ROLLER_R + 0.004, 0.003, M["rubber"])), "plate")
+    reg(on(TOP, cyl(f"Roller Lower Flange {i}", rx, ry, 0.0038, ROLLER_R + 0.0045, 0.0016, M["satin"])), "plate")
+    reg(on(TOP, cyl(f"Roller Hub {i}", rx, ry, 0.0082, ROLLER_R, 0.0072, M["chrome"])), "plate")
+    reg(on(TOP, cyl(f"Roller Upper Flange {i}", rx, ry, 0.0126, ROLLER_R + 0.0045, 0.0016, M["satin"])), "plate", f"roller_top_{s}")
+    reg(on(TOP, cyl(f"Roller Cap {i}", rx, ry, 0.0146, ROLLER_R * 0.75, 0.0024, M["satin"])), "plate", f"roller_top_{s}")
+    reg(on(TOP, cyl(f"Roller Screw {i}", rx, ry, 0.0160, 0.0018, 0.0004, M["hub"], seg=24)), "plate", f"roller_top_{s}")
 for k, (x, y) in enumerate([(-0.15, 0.104), (0.15, 0.104), (-0.15, -0.104), (0.15, -0.104),
                             (0, 0.1), (0, -0.032), (-0.075, -0.052), (0.075, -0.052)]):
     screw(f"T{k}", TOP, x, y, rot=(k * 53) % 180)
@@ -386,8 +392,8 @@ for key, (cx, cy) in KNOBS.items():
 
 knob_scale("Vol Scale", *KNOBS["volume"], [(i / 10, str(i)) for i in range(0, 11, 2)], [i / 10 for i in range(11)])
 knob_scale("Spd Scale", *KNOBS["speed"], [(0, "3.75"), (0.5, "7.5"), (1, "15")], [0, 0.25, 0.5, 0.75, 1])
-reg(on(FRONT, text("Label Volume", "VOLUME", KNOBS["volume"][0], 0.0255, 0.0032, M["ink"], z=0.0018)), "plate")
-reg(on(FRONT, text("Label Speed", "TAPE SPEED  IPS", KNOBS["speed"][0], 0.0255, 0.0032, M["ink"], z=0.0018)), "plate")
+reg(on(FRONT, text("Label Volume", "VOLUME", KNOBS["volume"][0], 0.0242, 0.0048, M["ink"], z=0.0018)), "plate")
+reg(on(FRONT, text("Label Speed", "TAPE SPEED  IPS", KNOBS["speed"][0], 0.0242, 0.0048, M["ink"], z=0.0018)), "plate")
 
 dcx, dcy, dw, dh = DISPLAY
 reg(on(FRONT, box("Display Frame", dcx, dcy, 0.001, dw + 0.003, dh + 0.003, 0.002, M["hub"], bevel=0.001)), "plate")
@@ -571,7 +577,7 @@ def frames(prefix, groups, box_px, count, set_frame, samples):
     except Exception as ex:
         print("프레임 합치기 실패 (개별 프레임은 frames/ 폴더):", prefix, ex)
 
-ALL = [g for g in G if g not in ("catcher", "tape_preview")]
+ALL = [g for g in G if g not in ("catcher", "tape_preview") and not g.startswith("roller_top")]
 
 def preview_pose():
     G["pack_R"][0].scale = (0.55, 0.55, 1)
@@ -595,24 +601,32 @@ preview_pose()
 render("preview.png", ALL + ["tape_preview"] + (["catcher"] if SHADOW else []), glass_alpha=False)
 neutral_pose()
 
-if MODE == "all":
+if MODE in ("all", "plate"):
+    FULL = MODE == "all"
     layers = {}
     # 본체: 노브·버튼은 기본 상태로 함께 렌더해 그림자를 남김 (위에 프레임 이미지가 덮음)
     keep = ["plate"] + (["catcher"] if SHADOW else []) + [f"knob_{k}" for k in KNOBS] + [f"key_{l}" for l, _, _ in KEYS]
     render("plate.png", keep, glass_alpha=False)
     layers["plate"] = {"file": "plate.png", "box": [0, 0, 1600, 1000]}
 
+    # 롤러 위 플랜지: 웹에서 테이프 위에 덮어 그림 (테이프가 롤러 홈에 걸린 모습)
+    layers["roller_tops"] = []
+    for s in "LR":
+        b = group_box([f"roller_top_{s}"], margin=6)
+        render(f"roller_top_{s}.png", [f"roller_top_{s}"], b)
+        layers["roller_tops"].append({"file": f"roller_top_{s}.png", "box": b})
+
     layers["glass"] = []
     for s in "LR":
         b = group_box([f"vutop_{s}"])
-        render(f"glass_{s}.png", [f"vutop_{s}"], b)
+        if FULL: render(f"glass_{s}.png", [f"vutop_{s}"], b)
         layers["glass"].append({"file": f"glass_{s}.png", "box": b})
 
     layers["reels"] = []
     for s in "LR":
         b = group_box([f"reel_{s}"])
         def setf(k, s=s): REEL_EMPTY[s].rotation_euler.z = -math.radians(120 * k / REEL_FRAMES)
-        frames(f"reel_{s}", [f"reel_{s}"], b, REEL_FRAMES, setf, max(32, SAMPLES // 2))
+        if FULL: frames(f"reel_{s}", [f"reel_{s}"], b, REEL_FRAMES, setf, max(32, SAMPLES // 2))
         REEL_EMPTY[s].rotation_euler.z = 0
         layers["reels"].append({"file": f"reel_{s}_strip.png", "box": b, "frames": REEL_FRAMES,
                                 "deg_per_frame": 120 / REEL_FRAMES, "direction": "clockwise_from_top"})
@@ -621,7 +635,7 @@ if MODE == "all":
     for key in KNOBS:
         b = group_box([f"knob_{key}"])
         def setk(k, key=key): KNOB_EMPTY[key].rotation_euler.z = -math.radians(-135 + 270 * k / (KNOB_FRAMES - 1))
-        frames(f"knob_{key}", [f"knob_{key}"], b, KNOB_FRAMES, setk, max(24, SAMPLES // 2))
+        if FULL: frames(f"knob_{key}", [f"knob_{key}"], b, KNOB_FRAMES, setk, max(24, SAMPLES // 2))
         KNOB_EMPTY[key].rotation_euler.z = 0
         layers["knobs"][key] = {"file": f"knob_{key}_strip.png", "box": b, "frames": KNOB_FRAMES,
                                 "angle_min": -135, "angle_max": 135}
@@ -630,9 +644,9 @@ if MODE == "all":
     for letter, x, _ in KEYS:
         b = group_box([f"key_{letter}"], margin=6)
         KEY_EMPTY[letter].location.z = 0
-        render(f"key_{letter}_up.png", [f"key_{letter}"], b)
+        if FULL: render(f"key_{letter}_up.png", [f"key_{letter}"], b)
         KEY_EMPTY[letter].location.z = -0.0015
-        render(f"key_{letter}_down.png", [f"key_{letter}"], b)
+        if FULL: render(f"key_{letter}_down.png", [f"key_{letter}"], b)
         KEY_EMPTY[letter].location.z = 0
         layers["keys"].append({"letter": letter, "up": f"key_{letter}_up.png", "down": f"key_{letter}_down.png", "box": b})
 
