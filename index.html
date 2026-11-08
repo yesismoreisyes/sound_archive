@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>소리들 : 정령들의 부동산 : 인터뷰</title>
+<title>소리들 - On (     ) Ways</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Nanum+Myeongjo:wght@700;800&display=swap">
@@ -34,7 +34,8 @@ body{font-family:var(--f-body);font-size:15px;line-height:1.6;min-height:100%;
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 
 header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-top:max(20px,env(safe-area-inset-top,0px))}
-header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,32px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance;text-shadow:0 1px 18px rgba(0,0,0,.5)}
+header h1{margin:0;display:flex;flex-direction:column;gap:2px;font-family:var(--f-display);font-weight:800;font-size:clamp(17px,2.5vw,24px);line-height:1.3;letter-spacing:-.01em;text-shadow:0 1px 18px rgba(0,0,0,.5)}
+header h1 .ws{white-space:pre}
 
 /* ---------- 데크 ---------- */
 .stage{position:relative;width:100%;max-width:100%;aspect-ratio:1600/1000;margin-top:-1%}
@@ -61,17 +62,15 @@ header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(
 .shelf-head span{font-family:var(--f-label);letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--ink-dim)}
 .lib{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:6px}
 @media (max-width:760px){.lib{grid-template-columns:minmax(0,1fr)}}
-.lib button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:28px 48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border-radius:8px}
+.lib button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border-radius:8px}
 .lib button:hover{background:rgba(255,255,255,.06)}
 .lib button:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
 .lib .no{font-family:var(--f-mono);font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
-.lib .thumb{width:48px;height:32px;border-radius:3px;background-size:cover;background-position:center;background-color:#222;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 .lib .t{min-width:0}
 .lib .t b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lib .t i{display:block;font-style:normal;font-size:12px;color:var(--ink-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lib .d{font-family:var(--f-mono);font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
 .lib li.active .no,.lib li.active .t b{color:var(--amber)}
-.lib li.active .thumb{box-shadow:inset 0 0 0 1px var(--amber)}
 .note{margin:4px 12px 0;color:var(--ink-faint);font-size:12px}
 
 @media (prefers-reduced-motion:reduce){.bg{transition:none}}
@@ -84,7 +83,7 @@ header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(
 
 <div class="wrap">
   <header>
-    <h1>소리들 : 정령들의 부동산 : 인터뷰</h1>
+    <h1><span>도시리서치프로젝트 &lt;소리들 - On (<span class="ws">     </span>) Ways&gt;</span><span>정령들의 부동산 인터뷰</span></h1>
   </header>
 
   <div class="stage" id="stage" aria-label="KD 아카이브 데크">
@@ -242,9 +241,8 @@ function renderList(){
   if(!ol.children.length){
     TRACKS.forEach((t,i)=>{
       const li=document.createElement("li"), b=document.createElement("button");
-      b.innerHTML=`<span class="no">${String(i+1).padStart(2,"0")}</span><span class="thumb"></span><span class="t"><b></b><i></i></span><span class="d"></span>`;
+      b.innerHTML=`<span class="no">${String(i+1).padStart(2,"0")}</span><span class="t"><b></b><i></i></span><span class="d"></span>`;
       b.querySelector("b").textContent=t.title; b.querySelector("i").textContent=t.meta||"";
-      if(t.bg) b.querySelector(".thumb").style.backgroundImage=`url("${t.bg}")`;
       b.onclick=()=>loadTrack(i,true); li.appendChild(b); ol.appendChild(li);
     });
     $("libCount").textContent=`${N} reels`;
