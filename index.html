@@ -100,7 +100,6 @@ header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(
   <section class="shelf" aria-labelledby="shelfTitle">
     <div class="shelf-head"><h2 id="shelfTitle">릴 목록</h2><span id="libCount"></span></div>
     <ol class="lib" id="lib"></ol>
-    <p class="note">지금 음원은 브라우저에서 만든 데모이고, 배경은 전시 전경 사진입니다. 실제 작업으로 교체하면 같은 방식으로 재생됩니다.</p>
   </section>
 </div>
 
@@ -111,18 +110,21 @@ header h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(
    bg  : 배경 이미지 경로 (jpg, webp, png). 트랙이 바뀔 때 천천히 바뀝니다.
    ========================================================= */
 const TRACKS = [
-  { title: "샘플 01 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg01.webp" },
-  { title: "샘플 02 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg02.webp" },
-  { title: "샘플 03 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg03.webp" },
-  { title: "샘플 04 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg04.webp" },
-  { title: "샘플 05 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg05.webp" },
-  { title: "샘플 06 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg06.webp" },
-  { title: "샘플 07 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg07.webp" },
-  { title: "샘플 08 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg08.webp" },
-  { title: "샘플 09 — 저역 드론",   meta: "데모 음원", src: null, bg: "bg/bg09.webp" },
-  { title: "샘플 10 — 펄스 신호",   meta: "데모 음원", src: null, bg: "bg/bg10.webp" },
-  { title: "샘플 11 — 필터 노이즈", meta: "데모 음원", src: null, bg: "bg/bg11.webp" },
-  { title: "샘플 12 — 화음 스웰",   meta: "데모 음원", src: null, bg: "bg/bg12.webp" },
+  { title: "인터뷰 01", meta: "", src: "audio/1INTV.mp3", bg: "bg/bg01.webp" },
+  { title: "인터뷰 02", meta: "", src: "audio/2INTV.mp3", bg: "bg/bg02.webp" },
+  { title: "인터뷰 03", meta: "", src: "audio/3INTV.mp3", bg: "bg/bg03.webp" },
+  { title: "인터뷰 04", meta: "", src: "audio/4INTV.mp3", bg: "bg/bg04.webp" },
+  { title: "인터뷰 05", meta: "", src: "audio/5INTV.mp3", bg: "bg/bg05.webp" },
+  { title: "인터뷰 06", meta: "", src: "audio/6INTV.mp3", bg: "bg/bg06.webp" },
+  { title: "인터뷰 07", meta: "", src: "audio/7INTV.mp3", bg: "bg/bg07.webp" },
+  { title: "인터뷰 08", meta: "", src: "audio/8INTV.mp3", bg: "bg/bg08.webp" },
+  { title: "인터뷰 09", meta: "", src: "audio/9INTV.mp3", bg: "bg/bg09.webp" },
+  { title: "인터뷰 10", meta: "", src: "audio/10INTV.mp3", bg: "bg/bg10.webp" },
+  { title: "인터뷰 11", meta: "", src: "audio/11INTV.mp3", bg: "bg/bg11.webp" },
+  { title: "인터뷰 12", meta: "", src: "audio/12INTV.mp3", bg: "bg/bg12.webp" },
+  { title: "인터뷰 13", meta: "", src: "audio/13INTV.mp3", bg: "bg/bg01.webp" },
+  { title: "인터뷰 14", meta: "", src: "audio/14INTV.mp3", bg: "bg/bg02.webp" },
+  { title: "인터뷰 15", meta: "", src: "audio/15INTV.mp3", bg: "bg/bg03.webp" },
 ];
 const DECK = "deck/";
 
