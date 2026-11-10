@@ -9,18 +9,45 @@
 :root {color-scheme:dark; --paper:#eceae5; --muted:#85898e; --accent:#edaa64; --bg:#030405; }
 *{box-sizing:border-box} html{background:var(--bg)} body{margin:0; min-height:100svh;background:var(--bg);color:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 auto;min-height:100svh;position:relative;overflow:hidden;padding-bottom:calc(40px + env(safe-area-inset-bottom))}
-.top{position:relative;z-index:3;padding:calc(30px + env(safe-area-inset-top)) 24px 0}.kicker{font-size:10px;letter-spacing:.28em;color:#858a8e;margin:0 0 13px}.top h1{font-size:clamp(22px,6vw,33px);font-weight:450;letter-spacing:-.055em;line-height:1.23;margin:0;word-break:keep-all}.top .sub{margin:10px 0 0;font-size:12px;line-height:1.6;color:#94999d}
-.stage{height:clamp(300px,47svh,480px);max-height:490px;position:relative;isolation:isolate;overflow:hidden;touch-action:pan-y}.stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,#030405 0%,transparent 16%,transparent 65%,#030405 100%);z-index:2}.ambient{position:absolute;width:280px;height:280px;border-radius:50%;filter:blur(66px);opacity:.23;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%);will-change:left,top}.ambient.blue{background:#126bf3}.ambient.orange{background:#ed6923}.orb{position:absolute;width:clamp(122px,37vw,195px);aspect-ratio:1;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);will-change:transform,left,top;pointer-events:none;isolation:isolate}.orb:before{content:"";position:absolute;inset:-15%;border-radius:50%;filter:blur(22px);opacity:.45;z-index:-1}.orb:after{content:"";position:absolute;left:19%;top:8%;width:40%;height:16%;border-radius:50%;transform:rotate(-35deg);background:rgba(255,255,255,.7);filter:blur(13px);opacity:.75}.orb.blue{background:radial-gradient(ellipse at 31% 23%,rgba(255,255,255,.94) 0%,rgba(195,240,255,.84) 5%,rgba(42,137,249,.5) 20%,transparent 44%),radial-gradient(circle at 63% 72%,#061321 7%,#063477 38%,#1388e8 62%,#c4f2ff 79%,#124b84 88%,#01070a 100%);box-shadow:inset 7px 9px 12px rgba(228,248,255,.46),inset -17px -15px 24px #00182f,0 0 15px 2px rgba(38,143,255,.7),0 0 55px 8px rgba(0,81,191,.31);border:1px solid rgba(160,223,255,.57)}.orb.blue:before{background:#1686fa}.orb.orange{background:radial-gradient(ellipse at 31% 23%,rgba(255,255,255,.95) 0%,rgba(255,244,202,.85) 5%,rgba(251,154,67,.6) 23%,transparent 44%),radial-gradient(circle at 67% 71%,#371206 6%,#a73b0e 35%,#ed7a21 60%,#ffe1a0 78%,#9f380c 88%,#0e0906 100%);box-shadow:inset 7px 9px 12px rgba(255,244,220,.55),inset -17px -14px 24px #421004,0 0 17px 2px rgba(255,136,40,.65),0 0 55px 8px rgba(214,71,0,.32);border:1px solid rgba(255,207,144,.64)}.orb.orange:before{background:#ff842c}
-.stage-note{position:absolute;bottom:17px;width:100%;text-align:center;font-size:9px;letter-spacing:.22em;color:#70787e;z-index:3}.player{position:relative;z-index:3;padding:0 24px}.line{height:1px;background:#25282b;margin:0 0 20px}.track-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.eyebrow{font-size:10px;letter-spacing:.19em;color:var(--accent);margin-bottom:7px}.playing-name{font-size:19px;font-weight:520;letter-spacing:-.035em;margin:0 0 5px}.playing-role{font-size:11px;color:#858b8e;min-height:16px}.counter{font-size:11px;letter-spacing:.16em;color:#868b90;white-space:nowrap;padding-top:3px}.progress{margin:22px 0 7px;width:100%;appearance:none;background:transparent;height:15px;cursor:pointer;display:block}.progress::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--progress,0%),#2a2e30 var(--progress,0%),#2a2e30 100%);height:2px}.progress::-moz-range-track{background:#2a2e30;height:2px}.progress::-moz-range-progress{background:var(--accent);height:2px}.progress::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:#eee6dc;border-radius:50%;margin-top:-5px}.progress::-moz-range-thumb{width:12px;height:12px;background:#eee6dc;border:0;border-radius:50%}.times{display:flex;justify-content:space-between;color:#7b8085;font-size:11px;font-variant-numeric:tabular-nums}.controls{display:flex;align-items:center;justify-content:center;gap:19px;margin-top:18px}.controls button{width:58px;height:55px;border:1px solid #24272a;border-radius:15px;background:#121416;cursor:pointer;display:grid;place-items:center;transition:background .15s}.controls button:active{background:#272c30}.controls .play{width:72px;height:62px;border-color:#8e633e;background:#352318;color:#ffe6ca}.controls svg{height:20px;width:20px;fill:currentColor}.notice{min-height:16px;margin:13px 0 0;font-size:11px;line-height:1.5;color:#8b8e90;text-align:center}
+.top{position:relative;z-index:3;padding:calc(30px + env(safe-area-inset-top)) 24px 0}.kicker{font-size:10px;letter-spacing:.28em;color:#858a8e;margin:0 0 13px}.top h1{font-size:clamp(22px,6vw,33px);font-weight:450;letter-spacing:-.055em;line-height:1.23;margin:0;word-break:keep-all}
+
+/* ── 스테이지: 지도가 또렷이 보이고, 그 위를 작은 유리 구슬이 떠다님 ── */
+.stage{height:clamp(260px,40svh,390px);max-height:400px;position:relative;isolation:isolate;overflow:hidden;touch-action:pan-y;margin-top:22px}
+.stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(3,4,5,.55) 0%,rgba(3,4,5,0) 16%,rgba(3,4,5,0) 78%,rgba(3,4,5,.9) 100%);z-index:3}
+.stage-underlay{position:absolute;inset:0;background:#07090a;z-index:0}
+.stage-map{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.82;filter:brightness(.9) contrast(1.04) saturate(.95);z-index:1}
+.stage-map-placeholder{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:12px;color:#6f767b;letter-spacing:.08em;z-index:1;background:radial-gradient(ellipse at center,#121517,#050607 75%)}
+.ambient{position:absolute;left:0;top:0;width:120px;height:120px;border-radius:50%;filter:blur(36px);opacity:.13;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%);z-index:2}
+.ambient.blue{background:radial-gradient(circle,rgba(110,200,255,1),rgba(30,120,255,0) 70%)}
+.ambient.orange{background:radial-gradient(circle,rgba(255,200,140,1),rgba(255,120,40,0) 70%)}
+
+/* 유리 구슬 */
+.orb{--t:180,225,255;position:absolute;left:0;top:0;width:clamp(56px,15vw,78px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;z-index:4}
+.orb.orange{--t:255,205,150}
+.orb > span{position:absolute;border-radius:50%}
+/* 바닥 그림자 + 유리가 모은 빛(코스틱) */
+.orb .shadow{left:22%;top:70%;width:92%;height:42%;z-index:-1;filter:blur(5px);
+ background:radial-gradient(ellipse at 42% 42%,rgba(var(--t),.5) 0%,rgba(var(--t),.12) 22%,rgba(0,0,0,.42) 42%,rgba(0,0,0,0) 72%)}
+/* 렌즈: 아래 지도를 확대·반전해서 보여 줌 (진짜 유리구슬처럼) */
+.orb .lens{inset:0;overflow:hidden;background-repeat:no-repeat;background-color:rgba(10,12,14,.15);transform:rotate(180deg);filter:brightness(1.05) contrast(1.06) saturate(1.05)}
+/* 유리 본체: 가운데는 투명, 가장자리로 갈수록 색과 반사가 짙어짐 */
+.orb .glass{inset:0;
+ background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0) 50%,rgba(var(--t),.10) 66%,rgba(var(--t),.34) 84%,rgba(255,255,255,.42) 97%,rgba(255,255,255,.12) 100%);
+ box-shadow:inset 0 0 0 .6px rgba(255,255,255,.35),inset -7px -9px 14px rgba(0,0,0,.32),inset 5px 6px 12px rgba(255,255,255,.10),0 0 14px rgba(var(--t),.16)}
+/* 하이라이트 */
+.orb .hl{left:17%;top:11%;width:38%;height:19%;transform:rotate(-38deg);filter:blur(.8px);
+ background:radial-gradient(ellipse at center,rgba(255,255,255,.95) 0%,rgba(255,255,255,.55) 35%,rgba(255,255,255,0) 72%)}
+.orb .hl2{right:15%;bottom:13%;width:34%;height:12%;transform:rotate(-38deg);filter:blur(2px);
+ background:radial-gradient(ellipse at center,rgba(var(--t),.55) 0%,rgba(255,255,255,0) 72%)}
+.orb .dot{right:24%;top:20%;width:7%;height:7%;background:rgba(255,255,255,.8);filter:blur(.6px)}
+
+.player{position:relative;z-index:3;padding:0 24px}.line{height:1px;background:#25282b;margin:0 0 20px}.track-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.eyebrow{font-size:10px;letter-spacing:.19em;color:var(--accent);margin-bottom:7px}.playing-name{font-size:19px;font-weight:520;letter-spacing:-.035em;margin:0 0 5px}.counter{font-size:11px;letter-spacing:.16em;color:#868b90;white-space:nowrap;padding-top:3px}.progress{margin:22px 0 7px;width:100%;appearance:none;background:transparent;height:15px;cursor:pointer;display:block}.progress::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--progress,0%),#2a2e30 var(--progress,0%),#2a2e30 100%);height:2px}.progress::-moz-range-track{background:#2a2e30;height:2px}.progress::-moz-range-progress{background:var(--accent);height:2px}.progress::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:#eee6dc;border-radius:50%;margin-top:-5px}.progress::-moz-range-thumb{width:12px;height:12px;background:#eee6dc;border:0;border-radius:50%}.times{display:flex;justify-content:space-between;color:#7b8085;font-size:11px;font-variant-numeric:tabular-nums}.controls{display:flex;align-items:center;justify-content:center;gap:19px;margin-top:18px}.controls button{width:58px;height:55px;border:1px solid #24272a;border-radius:15px;background:#121416;cursor:pointer;display:grid;place-items:center;transition:background .15s}.controls button:active{background:#272c30}.controls .play{width:72px;height:62px;border-color:#8e633e;background:#352318;color:#ffe6ca}.controls svg{height:20px;width:20px;fill:currentColor}.notice{min-height:16px;margin:13px 0 0;font-size:11px;line-height:1.5;color:#8b8e90;text-align:center}
 .archive{padding:36px 24px 0}.archive-head{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #25282b;padding-top:23px;margin-bottom:17px}.archive h2{margin:0;font-family:Georgia,"Noto Serif KR",serif;font-weight:400;font-size:25px}.count{font-size:10px;color:#888;letter-spacing:.2em}.reels{list-style:none;padding:0;margin:0}.reel{display:grid;grid-template-columns:34px 1fr 28px;gap:10px;align-items:center;padding:17px 0;border-bottom:1px solid #1e2022;cursor:pointer;width:100%;background:transparent;border-top:0;border-left:0;border-right:0;text-align:left}.reel .num{font-size:12px;letter-spacing:.06em;color:#6d7479}.reel .name{font-size:17px;letter-spacing:-.02em}.reel .role{margin-top:6px;font-size:11px;color:#85898c}.reel .mark{font-size:20px;color:#777;text-align:right;font-weight:200}.reel.selected .num,.reel.selected .name,.reel.selected .mark{color:var(--accent)}.footer{font-size:10px;line-height:1.6;color:#6e757a;padding:29px 24px 0;letter-spacing:.08em}
 @media (min-width:700px){body{display:grid;place-items:start center}.shell{box-shadow:0 0 80px #090e13}.stage{height:390px}}
-@media (prefers-reduced-motion:reduce){.orb,.ambient{will-change:auto}}
 
 [hidden]{display:none!important}
-/* 제목: 작은 화면에서도 조용한 두 줄 구성 */
 .top h1{font-size:clamp(23px,5.6vw,31px);letter-spacing:-.045em;line-height:1.35;overflow-wrap:normal;word-break:keep-all}
 .top .year{margin:10px 0 0;font-size:12px;letter-spacing:.28em;color:#a0a4a6}
-/* 각 트랙의 공간을 보여 주는 지도 */
 .map-section{padding:34px 24px 0;position:relative;z-index:3}
 .map-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
 .map-head h2{font-size:12px;letter-spacing:.15em;color:#d8d8d4;margin:0;font-weight:450}
@@ -43,13 +70,16 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 <body>
 <main class="shell">
 <header class="top"><h1>사운드 워크 — On My Ways</h1><p class="kicker year">2026</p></header>
-<section class="stage" aria-label="빛나는 파란색과 주황색의 유리 구슬 두 개가 부유하는 장면">
+<section class="stage" aria-label="현재 트랙의 지도 위를 작은 유리 구슬 두 개가 천천히 떠다니는 장면">
+  <div class="stage-underlay"></div>
+  <img class="stage-map" id="stage-map" src="maps/01.png" alt="현재 트랙의 이동 경로 지도" />
+  <div class="stage-map-placeholder" id="stage-map-placeholder" hidden>현재 트랙의 지도 준비 중</div>
   <div class="ambient blue" id="glow-blue"></div><div class="ambient orange" id="glow-orange"></div>
-  <div class="orb blue" id="orb-blue"></div><div class="orb orange" id="orb-orange"></div>
-  <div class="stage-note">TWO LIGHTS / TEN VOICES</div>
+  <div class="orb blue" id="orb-blue"><span class="shadow"></span><span class="lens"></span><span class="glass"></span><span class="hl2"></span><span class="hl"></span><span class="dot"></span></div>
+  <div class="orb orange" id="orb-orange"><span class="shadow"></span><span class="lens"></span><span class="glass"></span><span class="hl2"></span><span class="hl"></span><span class="dot"></span></div>
 </section>
 <section class="player" aria-label="오디오 플레이어">
- <div class="line"></div><div class="track-meta"><div><div class="eyebrow">NOW PLAYING</div><h2 class="playing-name" id="playing-name">트랙 01</h2><div class="playing-role" id="playing-role">인터뷰</div></div><span class="counter" id="counter">01 / 10</span></div>
+ <div class="line"></div><div class="track-meta"><div><div class="eyebrow">NOW PLAYING</div><h2 class="playing-name" id="playing-name">트랙 01</h2></div><span class="counter" id="counter">01 / 10</span></div>
  <input class="progress" id="seek" type="range" min="0" max="1000" value="0" aria-label="재생 위치" />
  <div class="times"><span id="current">00:00</span><span id="duration">00:00</span></div>
  <div class="controls">
@@ -97,6 +127,7 @@ function render(){reels.innerHTML='';tracks.forEach((track,i)=>{const btn=docume
 
 // 각 트랙에서 maps/01.png ... maps/10.png 경로를 읽습니다.
 const mapImg=$('map-image'), mapLarge=$('map-large'), mapPlaceholder=$('map-placeholder'), mapDialog=$('map-dialog');
+const stageMap=$('stage-map'), stageMapPlaceholder=$('stage-map-placeholder');
 let mapAvailable=false;
 function updateMap(){
  const num=String(index+1).padStart(2,'0');
@@ -107,20 +138,59 @@ function updateMap(){
  mapImg.alt=`트랙 ${num}의 이동 경로 지도`;
  mapImg.src=tracks[index].map;
  mapLarge.src=tracks[index].map;
+ stageMap.alt=`트랙 ${num}의 이동 경로 지도`;
+ stageMap.src=tracks[index].map;
 }
 mapImg.addEventListener('load',()=>{mapAvailable=true;mapPlaceholder.hidden=true;mapImg.hidden=false});
 mapImg.addEventListener('error',()=>{mapAvailable=false;mapImg.hidden=true;mapPlaceholder.hidden=false});
+
+// 유리 구슬 렌즈에 같은 지도를 넣어, 구슬을 통해 아래 지도가 확대·반전되어 보이도록 합니다.
+const lenses=[...document.querySelectorAll('.orb .lens')];
+let mapInfo=null;
+stageMap.addEventListener('load',()=>{
+ stageMap.hidden=false;stageMapPlaceholder.hidden=true;
+ mapInfo={nw:stageMap.naturalWidth,nh:stageMap.naturalHeight};
+ const src=stageMap.currentSrc||stageMap.src;
+ lenses.forEach(l=>l.style.backgroundImage=`url("${src}")`);
+ if(reduced)move(0);
+});
+stageMap.addEventListener('error',()=>{
+ stageMap.hidden=true;stageMapPlaceholder.hidden=false;mapInfo=null;
+ lenses.forEach(l=>l.style.backgroundImage='none');
+});
 $('map-open').addEventListener('click',()=>{if(mapAvailable && typeof mapDialog.showModal==='function')mapDialog.showModal()});
 $('map-close').addEventListener('click',()=>mapDialog.close());
 mapDialog.addEventListener('click',e=>{if(e.target===mapDialog)mapDialog.close()});
 
-function load(i,auto=false){index=(i+tracks.length)%tracks.length;audio.src=tracks[index].src;audio.load();$('playing-name').textContent=tracks[index].title;$('playing-role').textContent=tracks[index].role;$('counter').textContent=`${String(index+1).padStart(2,'0')} / ${String(tracks.length).padStart(2,'0')}`;seek.value=0;seek.style.setProperty('--progress','0%');$('current').textContent='00:00';$('duration').textContent='00:00';$('notice').textContent='';updateMap();render();syncPlay();if(auto)play()}
+function load(i,auto=false){index=(i+tracks.length)%tracks.length;audio.src=tracks[index].src;audio.load();$('playing-name').textContent=tracks[index].title;$('counter').textContent=`${String(index+1).padStart(2,'0')} / ${String(tracks.length).padStart(2,'0')}`;seek.value=0;seek.style.setProperty('--progress','0%');$('current').textContent='00:00';$('duration').textContent='00:00';$('notice').textContent='';updateMap();render();syncPlay();if(auto)play()}
 async function play(){try{if(audio.paused){await audio.play();$('notice').textContent=''}else audio.pause()}catch(e){$('notice').textContent='음원을 찾을 수 없습니다. audio 폴더에 MP3 파일을 업로드하세요.'}syncPlay()}
-$('play').addEventListener('click',play);$('prev').addEventListener('click',()=>load(index-1,true));$('next').addEventListener('click',()=>load(index+1,true));audio.addEventListener('play',syncPlay);audio.addEventListener('pause',syncPlay);audio.addEventListener('loadedmetadata',()=>{$('duration').textContent=fmt(audio.duration)});audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){seek.value=Math.round(audio.currentTime/audio.duration*1000);seek.style.setProperty('--progress',`${audio.currentTime/audio.duration*100}%`)}$('current').textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>load(index+1,true));audio.addEventListener('error',()=>{$('notice').textContent='이 트랙의 음원 파일이 없습니다. audio 폴더를 확인하세요.'});seek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration;seek.style.setProperty('--progress',`${Number(seek.value)/10}%`)});load(0);
-// 작은 비주기 운동을 합성해 두 개의 구슬이 서서히 궤도를 바꾸도록 합니다.
+$('play').addEventListener('click',play);$('prev').addEventListener('click',()=>load(index-1,true));$('next').addEventListener('click',()=>load(index+1,true));audio.addEventListener('play',syncPlay);audio.addEventListener('pause',syncPlay);audio.addEventListener('loadedmetadata',()=>{$('duration').textContent=fmt(audio.duration)});audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){seek.value=Math.round(audio.currentTime/audio.duration*1000);seek.style.setProperty('--progress',`${audio.currentTime/audio.duration*100}%`)}$('current').textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>load(index+1,true));audio.addEventListener('error',()=>{$('notice').textContent='이 트랙의 음원 파일이 없습니다. audio 폴더를 확인하세요.'});seek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration;seek.style.setProperty('--progress',`${Number(seek.value)/10}%`)});
+
+// 두 구슬이 지도 위를 느리고 비주기적으로 떠다닙니다.
 const stage=document.querySelector('.stage');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const MAG=1.75; // 구슬 렌즈 확대 배율
 const ob=[{orb:$('orb-blue'),glow:$('glow-blue'),phase:0},{orb:$('orb-orange'),glow:$('glow-orange'),phase:2.6}];
-function move(t){const seconds=t/1000,w=stage.clientWidth,h=stage.clientHeight;ob.forEach((o,i)=>{const p=o.phase;const x=w*(i===0?.38:.64)+Math.sin(seconds*.15+p)*w*.16+Math.sin(seconds*.093+p*2.1)*w*.065;const y=h*(i===0?.39:.58)+Math.cos(seconds*.17+p)*h*.15+Math.sin(seconds*.113+p)*h*.07;const rot=seconds*(i===0?3:-2.4);const scale=1+.045*Math.sin(seconds*.22+p);o.orb.style.left=`${x}px`;o.orb.style.top=`${y}px`;o.orb.style.transform=`translate(-50%,-50%) rotate(${rot}deg) scale(${scale})`;o.glow.style.left=`${x}px`;o.glow.style.top=`${y}px`;});if(!reduced)requestAnimationFrame(move)}move(0);
+ob.forEach(o=>o.lens=o.orb.querySelector('.lens'));
+function move(t){
+ const seconds=t/1000,w=stage.clientWidth,h=stage.clientHeight;
+ ob.forEach((o,i)=>{
+  const p=o.phase;
+  const x=w*(i===0?.32:.68)+Math.sin(seconds*.11+p)*w*.14+Math.sin(seconds*.07+p*2.1)*w*.05;
+  const y=h*(i===0?.42:.56)+Math.cos(seconds*.13+p)*h*.16+Math.sin(seconds*.085+p)*h*.06;
+  o.orb.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;
+  o.glow.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;
+  if(mapInfo&&mapInfo.nw){
+   const d=o.orb.offsetWidth;
+   const s=Math.max(w/mapInfo.nw,h/mapInfo.nh), dw=mapInfo.nw*s, dh=mapInfo.nh*s;
+   const ox=(w-dw)/2, oy=(h-dh)/2;
+   o.lens.style.backgroundSize=`${dw*MAG}px ${dh*MAG}px`;
+   o.lens.style.backgroundPosition=`${d/2-(x-ox)*MAG}px ${d/2-(y-oy)*MAG}px`;
+  }
+ });
+ if(!reduced)requestAnimationFrame(move);
+}
+load(0);
+move(0);
 </script>
 </body>
 </html>
