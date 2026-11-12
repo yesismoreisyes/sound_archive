@@ -4,10 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#030405" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600&display=swap">
 <title>사운드 워크 — On My Ways | 2026</title>
 <style>
 :root {color-scheme:dark; --paper:#eceae5; --muted:#85898e; --accent:#edaa64; --bg:#030405; }
-*{box-sizing:border-box} html{background:var(--bg)} body{margin:0; min-height:100svh;background:var(--bg);color:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box} html{background:var(--bg)} body{margin:0; min-height:100svh;background:var(--bg);color:var(--paper);font-family:"Noto Serif KR","AppleMyungjo","Nanum Myeongjo",serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 auto;min-height:100svh;position:relative;overflow:hidden;padding-bottom:calc(40px + env(safe-area-inset-bottom))}
 .top{position:relative;z-index:3;padding:calc(30px + env(safe-area-inset-top)) 24px 0}.kicker{font-size:10px;letter-spacing:.28em;color:#858a8e;margin:0 0 13px}.top h1{font-size:clamp(22px,6vw,33px);font-weight:450;letter-spacing:-.055em;line-height:1.23;margin:0;word-break:keep-all}
 
@@ -49,7 +52,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 .orb .dot{right:24%;top:20%;width:7%;height:7%;background:rgba(255,255,255,.8);filter:blur(.6px)}
 
 .player{position:relative;z-index:3;padding:0 24px}.line{height:1px;background:#25282b;margin:0 0 14px}.track-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.eyebrow{font-size:10px;letter-spacing:.19em;color:var(--accent);margin-bottom:7px}.playing-name{font-size:13px;font-weight:500;letter-spacing:.02em;color:#c9cbcc;margin:0 0 4px}.counter{font-size:11px;letter-spacing:.16em;color:#868b90;white-space:nowrap;padding-top:3px}.progress{margin:22px 0 7px;width:100%;appearance:none;background:transparent;height:15px;cursor:pointer;display:block}.progress::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--progress,0%),#2a2e30 var(--progress,0%),#2a2e30 100%);height:2px}.progress::-moz-range-track{background:#2a2e30;height:2px}.progress::-moz-range-progress{background:var(--accent);height:2px}.progress::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:#eee6dc;border-radius:50%;margin-top:-5px}.progress::-moz-range-thumb{width:12px;height:12px;background:#eee6dc;border:0;border-radius:50%}.times{display:flex;justify-content:space-between;color:#7b8085;font-size:11px;font-variant-numeric:tabular-nums}.controls{display:flex;align-items:center;justify-content:center;gap:19px;margin-top:18px}.controls button{width:58px;height:55px;border:1px solid #24272a;border-radius:15px;background:#121416;cursor:pointer;display:grid;place-items:center;transition:background .15s}.controls button:active{background:#272c30}.controls .play{width:72px;height:62px;border-color:#8e633e;background:#352318;color:#ffe6ca}.controls svg{height:20px;width:20px;fill:currentColor}.notice{min-height:16px;margin:13px 0 0;font-size:11px;line-height:1.5;color:#8b8e90;text-align:center}
-.archive{padding:36px 24px 0}.archive-head{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #25282b;padding-top:23px;margin-bottom:17px}.archive h2{margin:0;font-family:Georgia,"Noto Serif KR",serif;font-weight:400;font-size:25px}.count{font-size:10px;color:#888;letter-spacing:.2em}.reels{list-style:none;padding:0;margin:0}.reel{display:grid;grid-template-columns:34px 1fr 28px;gap:10px;align-items:center;padding:17px 0;border-bottom:1px solid #1e2022;cursor:pointer;width:100%;background:transparent;border-top:0;border-left:0;border-right:0;text-align:left}.reel .num{font-size:12px;letter-spacing:.06em;color:#6d7479}.reel .name{font-size:17px;letter-spacing:-.02em}.reel .role{margin-top:6px;font-size:11px;color:#85898c}.reel .mark{font-size:20px;color:#777;text-align:right;font-weight:200}.reel.selected .num,.reel.selected .name,.reel.selected .mark{color:var(--accent)}.footer{font-size:10px;line-height:1.6;color:#6e757a;padding:29px 24px 0;letter-spacing:.08em}
+.archive{padding:36px 24px 0}.archive-head{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #25282b;padding-top:23px;margin-bottom:17px}.archive h2{margin:0;font-family:"Noto Serif KR",serif;font-weight:400;font-size:25px}.count{font-size:10px;color:#888;letter-spacing:.2em}.reels{list-style:none;padding:0;margin:0}.reel{display:grid;grid-template-columns:34px 1fr 28px;gap:10px;align-items:center;padding:17px 0;border-bottom:1px solid #1e2022;cursor:pointer;width:100%;background:transparent;border-top:0;border-left:0;border-right:0;text-align:left}.reel .num{font-size:12px;letter-spacing:.06em;color:#6d7479}.reel .name{font-size:17px;letter-spacing:-.02em}.reel .role{margin-top:6px;font-size:11px;color:#85898c}.reel .mark{font-size:20px;color:#777;text-align:right;font-weight:200}.reel.selected .num,.reel.selected .name,.reel.selected .mark{color:var(--accent)}.footer{font-size:10px;line-height:1.6;color:#6e757a;padding:29px 24px 0;letter-spacing:.08em}
 @media (min-width:700px){body{display:grid;place-items:start center}.shell{box-shadow:0 0 80px #090e13}}
 
 
@@ -70,6 +73,8 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 .hero .controls .play{width:60px;height:46px}
 .hero .controls svg{width:17px;height:17px}
 .hero .notice{min-height:0;margin:6px 0 0;font-size:10px}
+.footer p{margin:0}.footer .credit-title{color:#c9cbcc;font-size:12px;letter-spacing:0;margin-bottom:6px}.footer .credit-name{margin-top:14px;color:#c9cbcc;font-size:12px;letter-spacing:.04em}
+.playing-place,.reel .role,.footer,.notice,.times{font-weight:500}
 [hidden]{display:none!important}
 .top h1{font-size:clamp(23px,5.6vw,31px);letter-spacing:-.045em;line-height:1.35;overflow-wrap:normal;word-break:keep-all}
 .top .year{margin:10px 0 0;font-size:12px;letter-spacing:.28em;color:#a0a4a6}
@@ -129,7 +134,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
  <img id="map-large" src="maps/01.jpg" alt="선택한 트랙의 전체 이동 경로 지도" />
 </dialog>
 <section class="archive" aria-label="릴 목록"><div class="archive-head"><h2>릴 목록</h2><span class="count">08 REELS</span></div><div class="reels" id="reels"></div></section>
-<footer class="footer">SOUND WALK · LISTEN IN THE DARK</footer>
+<footer class="footer"><p class="credit-title">사운드 워크 — On My Ways</p><p>2026</p><p>사운드 워크, 색안경, 지도, 헤드폰</p><p>30분</p><p class="credit-name">김다움</p></footer>
 <audio id="audio" preload="metadata"></audio>
 </main>
 <script>
