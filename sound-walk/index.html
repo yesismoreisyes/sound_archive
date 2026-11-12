@@ -112,7 +112,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
   <button type="button" id="prev" aria-label="이전 트랙"><svg viewBox="0 0 24 24"><path d="M5 4h2v16H5zm14 0v16L8 12z"/></svg></button>
   <button type="button" class="play" id="play" aria-label="재생"><svg id="play-icon" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></button>
   <button type="button" id="next" aria-label="다음 트랙"><svg viewBox="0 0 24 24"><path d="M17 4h2v16h-2zM5 4v16l11-8z"/></svg></button>
- </div><p class="notice" id="notice" role="status">음원 파일을 올리면 재생할 수 있습니다.</p>
+ </div><p class="notice" id="notice" role="status"></p>
 </section>
 </div>
 <section class="map-section" aria-label="현재 트랙 이동 경로 지도">
@@ -188,8 +188,8 @@ $('map-close').addEventListener('click',()=>mapDialog.close());
 mapDialog.addEventListener('click',e=>{if(e.target===mapDialog)mapDialog.close()});
 
 function load(i,auto=false){index=(i+tracks.length)%tracks.length;audio.src=tracks[index].src;audio.load();$('playing-name').textContent=tracks[index].title;$('playing-place').textContent=tracks[index].role||'';seek.value=0;seek.style.setProperty('--progress','0%');$('current').textContent='00:00';$('duration').textContent='00:00';$('notice').textContent='';updateMap();render();syncPlay();if(auto)play()}
-async function play(){try{if(audio.paused){await audio.play();$('notice').textContent=''}else audio.pause()}catch(e){$('notice').textContent='음원을 찾을 수 없습니다. audio 폴더에 MP3 파일을 업로드하세요.'}syncPlay()}
-$('play').addEventListener('click',play);$('prev').addEventListener('click',()=>load(index-1,true));$('next').addEventListener('click',()=>load(index+1,true));audio.addEventListener('play',syncPlay);audio.addEventListener('pause',syncPlay);audio.addEventListener('loadedmetadata',()=>{$('duration').textContent=fmt(audio.duration)});audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){seek.value=Math.round(audio.currentTime/audio.duration*1000);seek.style.setProperty('--progress',`${audio.currentTime/audio.duration*100}%`)}$('current').textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>{syncPlay();$('notice').textContent=index<tracks.length-1?'트랙이 끝났습니다. 다음 장소에 도착하면 다음 트랙 버튼을 눌러 주세요.':'마지막 트랙이 끝났습니다.'});audio.addEventListener('error',()=>{$('notice').textContent='이 트랙의 음원 파일이 없습니다. audio 폴더를 확인하세요.'});seek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration;seek.style.setProperty('--progress',`${Number(seek.value)/10}%`)});
+async function play(){try{if(audio.paused){await audio.play();$('notice').textContent=''}else audio.pause()}catch(e){$('notice').textContent='소리를 불러오지 못했습니다. 연결 상태를 확인한 뒤 다시 눌러 주세요.'}syncPlay()}
+$('play').addEventListener('click',play);$('prev').addEventListener('click',()=>load(index-1,true));$('next').addEventListener('click',()=>load(index+1,true));audio.addEventListener('play',syncPlay);audio.addEventListener('pause',syncPlay);audio.addEventListener('loadedmetadata',()=>{$('duration').textContent=fmt(audio.duration)});audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){seek.value=Math.round(audio.currentTime/audio.duration*1000);seek.style.setProperty('--progress',`${audio.currentTime/audio.duration*100}%`)}$('current').textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>{syncPlay();$('notice').textContent=index<tracks.length-1?'트랙이 끝났습니다. 다음 장소에 도착하면 다음 트랙 버튼을 눌러 주세요.':'마지막 트랙이 끝났습니다.'});audio.addEventListener('error',()=>{$('notice').textContent='소리를 불러오지 못했습니다. 연결 상태를 확인한 뒤 다시 눌러 주세요.'});seek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration;seek.style.setProperty('--progress',`${Number(seek.value)/10}%`)});
 
 // 두 구슬이 지도 위를 느리고 비주기적으로 떠다닙니다.
 const stage=document.querySelector('.stage');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
