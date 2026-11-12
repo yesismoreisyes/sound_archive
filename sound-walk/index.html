@@ -59,7 +59,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 .map-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
 .map-head h2{font-size:12px;letter-spacing:.15em;color:#d8d8d4;margin:0;font-weight:450}
 .map-id{font-size:10px;letter-spacing:.18em;color:#858b90}
-.map-open{position:relative;width:100%;border:1px solid #25282b;border-radius:13px;display:block;overflow:hidden;background:#0c0d0e;padding:0;cursor:zoom-in;text-align:left;aspect-ratio:1.52}
+.map-open{position:relative;width:100%;border:1px solid #25282b;border-radius:13px;display:block;overflow:hidden;background:#0c0d0e;padding:0;cursor:zoom-in;text-align:left;aspect-ratio:963/1498}
 .map-open img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .38s ease,transform .5s ease;filter:brightness(.84)}
 .map-open:active img{transform:scale(1.025)}
 .map-open:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,transparent 63%,rgba(0,0,0,.75))}
@@ -79,14 +79,14 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 <header class="top"><h1>사운드 워크 — On My Ways</h1><p class="kicker year">2026</p></header>
 <section class="stage" aria-label="현재 트랙의 지도 위를 작은 유리 구슬 두 개가 천천히 떠다니는 장면">
   <div class="stage-underlay"></div>
-  <img class="stage-map" id="stage-map" src="maps/01.png" alt="현재 트랙의 이동 경로 지도" />
+  <img class="stage-map" id="stage-map" src="maps/01.jpg" alt="현재 트랙의 이동 경로 지도" />
   <div class="stage-map-placeholder" id="stage-map-placeholder" hidden>현재 트랙의 지도 준비 중</div>
   <div class="ambient blue" id="glow-blue"></div><div class="ambient orange" id="glow-orange"></div>
   <div class="orb blue" id="orb-blue"><span class="shadow"></span><span class="lens"></span><span class="glass"></span><span class="hl2"></span><span class="hl"></span><span class="dot"></span></div>
   <div class="orb orange" id="orb-orange"><span class="shadow"></span><span class="lens"></span><span class="glass"></span><span class="hl2"></span><span class="hl"></span><span class="dot"></span></div>
 </section>
 <section class="player" aria-label="오디오 플레이어">
- <div class="line"></div><div class="track-meta"><div><div class="eyebrow">NOW PLAYING</div><h2 class="playing-name" id="playing-name">트랙 01</h2></div><span class="counter" id="counter">01 / 10</span></div>
+ <div class="line"></div><div class="track-meta"><div><div class="eyebrow">NOW PLAYING</div><h2 class="playing-name" id="playing-name">트랙 01</h2></div><span class="counter" id="counter">01 / 08</span></div>
  <input class="progress" id="seek" type="range" min="0" max="1000" value="0" aria-label="재생 위치" />
  <div class="times"><span id="current">00:00</span><span id="duration">00:00</span></div>
  <div class="controls">
@@ -96,35 +96,33 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
  </div><p class="notice" id="notice" role="status">음원 파일을 올리면 재생할 수 있습니다.</p>
 </section>
 <section class="map-section" aria-label="현재 트랙 이동 경로 지도">
- <div class="map-head"><h2>WALK MAP</h2><span class="map-id" id="map-id">01 / 10</span></div>
+ <div class="map-head"><h2>WALK MAP</h2><span class="map-id" id="map-id">01 / 08</span></div>
  <button class="map-open" type="button" id="map-open" aria-label="현재 트랙 지도 확대해서 보기">
-  <img id="map-image" src="maps/01.png" alt="트랙 01의 이동 경로 지도" />
+  <img id="map-image" src="maps/01.jpg" alt="트랙 01의 이동 경로 지도" />
   <div class="map-placeholder" id="map-placeholder" hidden>이 트랙의 지도는 준비 중입니다.</div>
  </button>
- <div class="map-foot"><span id="map-caption">TRACK 01 · WALK ROUTE</span><span class="zoom">TAP TO EXPAND ↗</span></div>
+ <div class="map-foot"><span id="map-caption">TRACK 01 · WALK ROUTE</span></div>
 </section>
 <dialog class="map-dialog" id="map-dialog" aria-label="이동 경로 확대 지도">
  <span class="dialog-title" id="dialog-title">TRACK 01 · WALK MAP</span>
  <button class="close" type="button" id="map-close" aria-label="지도 닫기">×</button>
- <img id="map-large" src="maps/01.png" alt="선택한 트랙의 전체 이동 경로 지도" />
+ <img id="map-large" src="maps/01.jpg" alt="선택한 트랙의 전체 이동 경로 지도" />
 </dialog>
-<section class="archive" aria-label="릴 목록"><div class="archive-head"><h2>릴 목록</h2><span class="count">10 REELS</span></div><div class="reels" id="reels"></div></section>
+<section class="archive" aria-label="릴 목록"><div class="archive-head"><h2>릴 목록</h2><span class="count">08 REELS</span></div><div class="reels" id="reels"></div></section>
 <footer class="footer">SOUND WALK · LISTEN IN THE DARK</footer>
 <audio id="audio" preload="metadata"></audio>
 </main>
 <script>
 // 여기서 트랙의 제목과 설명을 변경하세요. audio 폴더의 파일 이름과 일치해야 합니다.
 const tracks = [
- {title:'트랙 01',role:'인터뷰',src:'audio/01.mp3',map:'maps/01.png'},
- {title:'트랙 02',role:'인터뷰',src:'audio/02.mp3',map:'maps/02.png'},
- {title:'트랙 03',role:'인터뷰',src:'audio/03.mp3',map:'maps/03.png'},
- {title:'트랙 04',role:'인터뷰',src:'audio/04.mp3',map:'maps/04.png'},
- {title:'트랙 05',role:'인터뷰',src:'audio/05.mp3',map:'maps/05.png'},
- {title:'트랙 06',role:'인터뷰',src:'audio/06.mp3',map:'maps/06.png'},
- {title:'트랙 07',role:'인터뷰',src:'audio/07.mp3',map:'maps/07.png'},
- {title:'트랙 08',role:'인터뷰',src:'audio/08.mp3',map:'maps/08.png'},
- {title:'트랙 09',role:'인터뷰',src:'audio/09.mp3',map:'maps/09.png'},
- {title:'트랙 10',role:'인터뷰',src:'audio/10.mp3',map:'maps/10.png'}
+ {title:'트랙 01',role:'factory2',src:'audio/01.mp3',map:'maps/01.jpg'},
+ {title:'트랙 02',role:'계단',src:'audio/02.mp3',map:'maps/02.jpg'},
+ {title:'트랙 03',role:'8층',src:'audio/03.mp3',map:'maps/03.jpg'},
+ {title:'트랙 04',role:'새문안로',src:'audio/04.mp3',map:'maps/04.jpg'},
+ {title:'트랙 05',role:'계단',src:'audio/05.mp3',map:'maps/05.jpg'},
+ {title:'트랙 06',role:'옛러시아 공사관 앞',src:'audio/06.mp3',map:'maps/06.jpg'},
+ {title:'트랙 07',role:'공원에서 정동길로 가는 길',src:'audio/07.mp3',map:'maps/07.jpg'},
+ {title:'트랙 08',role:'정동길',src:'audio/08.mp3',map:'maps/08.jpg'}
 ];
 const $=id=>document.getElementById(id);
 const audio=$('audio'), reels=$('reels'), seek=$('seek'); let index=0;
@@ -132,7 +130,7 @@ function fmt(s){if(!Number.isFinite(s))return '00:00'; const m=Math.floor(s/60),
 function syncPlay(){const isPlaying=!audio.paused;$('play-icon').innerHTML=isPlaying?'<path d="M6 4h4v16H6zm8 0h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$('play').setAttribute('aria-label',isPlaying?'일시정지':'재생')}
 function render(){reels.innerHTML='';tracks.forEach((track,i)=>{const btn=document.createElement('button');btn.type='button';btn.className='reel'+(i===index?' selected':'');btn.setAttribute('aria-label',`${i+1}번 ${track.title} 재생`);btn.setAttribute('aria-current',i===index?'true':'false');const num=document.createElement('span');num.className='num';num.textContent=String(i+1).padStart(2,'0');const info=document.createElement('span');const name=document.createElement('div');name.className='name';name.textContent=track.title;const role=document.createElement('div');role.className='role';role.textContent=track.role;info.append(name,role);const mark=document.createElement('span');mark.className='mark';mark.textContent=i===index?'−':'+';btn.append(num,info,mark);btn.addEventListener('click',()=>load(i,true));reels.append(btn)})}
 
-// 각 트랙에서 maps/01.png ... maps/10.png 경로를 읽습니다.
+// 각 트랙에서 maps/01.jpg ... maps/10.jpg 경로를 읽습니다.
 const mapImg=$('map-image'), mapLarge=$('map-large'), mapPlaceholder=$('map-placeholder'), mapDialog=$('map-dialog');
 const stageMap=$('stage-map'), stageMapPlaceholder=$('stage-map-placeholder');
 let mapAvailable=false;
