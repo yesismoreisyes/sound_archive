@@ -52,6 +52,24 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 .archive{padding:36px 24px 0}.archive-head{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #25282b;padding-top:23px;margin-bottom:17px}.archive h2{margin:0;font-family:Georgia,"Noto Serif KR",serif;font-weight:400;font-size:25px}.count{font-size:10px;color:#888;letter-spacing:.2em}.reels{list-style:none;padding:0;margin:0}.reel{display:grid;grid-template-columns:34px 1fr 28px;gap:10px;align-items:center;padding:17px 0;border-bottom:1px solid #1e2022;cursor:pointer;width:100%;background:transparent;border-top:0;border-left:0;border-right:0;text-align:left}.reel .num{font-size:12px;letter-spacing:.06em;color:#6d7479}.reel .name{font-size:17px;letter-spacing:-.02em}.reel .role{margin-top:6px;font-size:11px;color:#85898c}.reel .mark{font-size:20px;color:#777;text-align:right;font-weight:200}.reel.selected .num,.reel.selected .name,.reel.selected .mark{color:var(--accent)}.footer{font-size:10px;line-height:1.6;color:#6e757a;padding:29px 24px 0;letter-spacing:.08em}
 @media (min-width:700px){body{display:grid;place-items:start center}.shell{box-shadow:0 0 80px #090e13}}
 
+
+/* ── 첫 화면: 제목·지도·플레이어가 한 화면 안에 ── */
+.hero{height:100svh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.hero .top{flex:none;padding:calc(14px + env(safe-area-inset-top)) 20px 0}
+.hero .top h1{font-size:clamp(18px,4.8vw,24px);line-height:1.25}
+.hero .top .year{margin:5px 0 0;font-size:10px}
+.hero .stage{flex:1 1 auto;min-height:0;height:auto;aspect-ratio:auto;margin-top:10px}
+.hero .player{flex:none;padding:0 20px 12px}
+.hero .line{margin:0 0 10px}
+.track-meta{align-items:baseline}
+.playing-name{margin:0}
+.playing-place{font-size:12px;color:#8b8f92;margin-left:8px;font-weight:400;letter-spacing:0}
+.hero .progress{margin:8px 0 4px}
+.hero .controls{gap:14px;margin-top:8px}
+.hero .controls button{width:48px;height:40px;border-radius:12px}
+.hero .controls .play{width:60px;height:46px}
+.hero .controls svg{width:17px;height:17px}
+.hero .notice{min-height:0;margin:6px 0 0;font-size:10px}
 [hidden]{display:none!important}
 .top h1{font-size:clamp(23px,5.6vw,31px);letter-spacing:-.045em;line-height:1.35;overflow-wrap:normal;word-break:keep-all}
 .top .year{margin:10px 0 0;font-size:12px;letter-spacing:.28em;color:#a0a4a6}
@@ -76,6 +94,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
 </head>
 <body>
 <main class="shell">
+<div class="hero">
 <header class="top"><h1>사운드 워크 — On My Ways</h1><p class="kicker year">2026</p></header>
 <section class="stage" aria-label="현재 트랙의 지도 위를 작은 유리 구슬 두 개가 천천히 떠다니는 장면">
   <div class="stage-underlay"></div>
@@ -86,7 +105,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
   <div class="orb orange" id="orb-orange"><span class="shadow"></span><span class="lens"></span><span class="glass"></span><span class="hl2"></span><span class="hl"></span><span class="dot"></span></div>
 </section>
 <section class="player" aria-label="오디오 플레이어">
- <div class="line"></div><div class="track-meta"><h2 class="playing-name" id="playing-name">트랙 01</h2></div>
+ <div class="line"></div><div class="track-meta"><h2 class="playing-name"><span id="playing-name">트랙 01</span><span class="playing-place" id="playing-place">factory2</span></h2></div>
  <input class="progress" id="seek" type="range" min="0" max="1000" value="0" aria-label="재생 위치" />
  <div class="times"><span id="current">00:00</span><span id="duration">00:00</span></div>
  <div class="controls">
@@ -95,6 +114,7 @@ button{font:inherit;color:inherit} .shell{width:100%;max-width:580px;margin:0 au
   <button type="button" id="next" aria-label="다음 트랙"><svg viewBox="0 0 24 24"><path d="M17 4h2v16h-2zM5 4v16l11-8z"/></svg></button>
  </div><p class="notice" id="notice" role="status">음원 파일을 올리면 재생할 수 있습니다.</p>
 </section>
+</div>
 <section class="map-section" aria-label="현재 트랙 이동 경로 지도">
  <div class="map-head"><h2>WALK MAP</h2><span class="map-id" id="map-id">01 / 08</span></div>
  <button class="map-open" type="button" id="map-open" aria-label="현재 트랙 지도 확대해서 보기">
@@ -167,7 +187,7 @@ $('map-open').addEventListener('click',()=>{if(mapAvailable && typeof mapDialog.
 $('map-close').addEventListener('click',()=>mapDialog.close());
 mapDialog.addEventListener('click',e=>{if(e.target===mapDialog)mapDialog.close()});
 
-function load(i,auto=false){index=(i+tracks.length)%tracks.length;audio.src=tracks[index].src;audio.load();$('playing-name').textContent=tracks[index].title;seek.value=0;seek.style.setProperty('--progress','0%');$('current').textContent='00:00';$('duration').textContent='00:00';$('notice').textContent='';updateMap();render();syncPlay();if(auto)play()}
+function load(i,auto=false){index=(i+tracks.length)%tracks.length;audio.src=tracks[index].src;audio.load();$('playing-name').textContent=tracks[index].title;$('playing-place').textContent=tracks[index].role||'';seek.value=0;seek.style.setProperty('--progress','0%');$('current').textContent='00:00';$('duration').textContent='00:00';$('notice').textContent='';updateMap();render();syncPlay();if(auto)play()}
 async function play(){try{if(audio.paused){await audio.play();$('notice').textContent=''}else audio.pause()}catch(e){$('notice').textContent='음원을 찾을 수 없습니다. audio 폴더에 MP3 파일을 업로드하세요.'}syncPlay()}
 $('play').addEventListener('click',play);$('prev').addEventListener('click',()=>load(index-1,true));$('next').addEventListener('click',()=>load(index+1,true));audio.addEventListener('play',syncPlay);audio.addEventListener('pause',syncPlay);audio.addEventListener('loadedmetadata',()=>{$('duration').textContent=fmt(audio.duration)});audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){seek.value=Math.round(audio.currentTime/audio.duration*1000);seek.style.setProperty('--progress',`${audio.currentTime/audio.duration*100}%`)}$('current').textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>load(index+1,true));audio.addEventListener('error',()=>{$('notice').textContent='이 트랙의 음원 파일이 없습니다. audio 폴더를 확인하세요.'});seek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration;seek.style.setProperty('--progress',`${Number(seek.value)/10}%`)});
 
@@ -178,16 +198,16 @@ const ob=[{orb:$('orb-blue'),glow:$('glow-blue'),phase:0},{orb:$('orb-orange'),g
 ob.forEach(o=>o.lens=o.orb.querySelector('.lens'));
 function move(t){
  const seconds=t/1000,w=stage.clientWidth,h=stage.clientHeight;
+ let dw=w,dh=h,ox=0,oy=0;
+ if(mapInfo&&mapInfo.nw){const s=Math.min(w/mapInfo.nw,h/mapInfo.nh);dw=mapInfo.nw*s;dh=mapInfo.nh*s;ox=(w-dw)/2;oy=(h-dh)/2}
  ob.forEach((o,i)=>{
   const p=o.phase;
-  const x=w*(i===0?.32:.68)+Math.sin(seconds*.11+p)*w*.14+Math.sin(seconds*.07+p*2.1)*w*.05;
-  const y=h*(i===0?.42:.56)+Math.cos(seconds*.13+p)*h*.16+Math.sin(seconds*.085+p)*h*.06;
+  const x=ox+dw*(i===0?.32:.68)+Math.sin(seconds*.11+p)*dw*.14+Math.sin(seconds*.07+p*2.1)*dw*.05;
+  const y=oy+dh*(i===0?.42:.56)+Math.cos(seconds*.13+p)*dh*.16+Math.sin(seconds*.085+p)*dh*.06;
   o.orb.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;
   o.glow.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;
   if(mapInfo&&mapInfo.nw){
    const d=o.orb.offsetWidth;
-   const s=Math.min(w/mapInfo.nw,h/mapInfo.nh), dw=mapInfo.nw*s, dh=mapInfo.nh*s;
-   const ox=(w-dw)/2, oy=(h-dh)/2;
    o.lens.style.backgroundSize=`${dw*MAG}px ${dh*MAG}px`;
    o.lens.style.backgroundPosition=`${d/2-(x-ox)*MAG}px ${d/2-(y-oy)*MAG}px`;
   }
